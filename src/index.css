@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+@media print {
+  /* Eliminar cabeceras y pies de página del navegador (URL, Fecha, etc) */
+  @page {
+    size: auto;
+    margin: 0mm;
+  }
+
+  /* Resetear estilos base para impresión */
+  body {
+    background: white !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ocultar el layout principal de la aplicación y navegación */
+  aside, nav, .flex.min-h-screen > aside, .no-print {
+    display: none !important;
+  }
+
+  /* Ajustar el contenedor de contenido para que no tenga márgenes */
+  main, .flex-1, #root {
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    width: 100% !important;
+  }
+
+  /* Mostrar solo el área de impresión y ocultar el resto del contenido de la página */
+  #print-area {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    padding: 0 !important;
+  }
+
+  /* Si hay otros elementos en la página, esconderlos */
+  body > div:not(#root) {
+    display: none !important;
+  }
+
+  /* Estilos para el ticket impreso */
+  .ticket-print {
+    border: 1px dashed #ccc !important;
+    border-radius: 0 !important;
+    margin-bottom: 20px !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    padding: 20px !important;
+  }
+
+  /* MODO PRE-IMPRESO: Solo imprime los datos dinámicos */
+  .mode-preprinted .label-fixed {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  .mode-preprinted .ticket-print {
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin-bottom: 5cm !important; /* Espacio entre tickets si son varios */
+    position: relative !important;
+    min-height: 10cm; /* Altura mínima estimada de una tarjeta física */
+  }
+
+  .mode-preprinted .header-section,
+  .mode-preprinted .footer-section,
+  .mode-preprinted .data-section {
+    border: none !important;
+  }
+
+  .mode-preprinted .value-dynamic {
+    color: #000 !important;
+    font-weight: 900 !important;
+    background: transparent !important;
+  }
+
+  /* Forzar colores para impresión */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
+
+/* Tipografía monoespaciada para que luzca como llenado a máquina en el papel pre-impreso */
+.value-dynamic {
+  font-family: 'Courier New', Courier, monospace;
+}
