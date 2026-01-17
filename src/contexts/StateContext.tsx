@@ -75,8 +75,27 @@ const INITIAL_VEHICULOS: Vehiculo[] = [
 ];
 
 const INITIAL_CONDUCTORES: Conductor[] = [
-  { rut: '12.345.678-9', nombre: 'Juan Pérez', vencimientoLicencia: '2027-10-12', vehiculoId: 101, bloqueado: false },
-  { rut: '98.765.432-1', nombre: 'Diego Soto', vencimientoLicencia: '2025-01-10', vehiculoId: 102, bloqueado: true, motivoBloqueo: 'Licencia vencida' },
+  { 
+    rut: '12.345.678-9', 
+    nombre: 'Juan Pérez', 
+    vencimientoLicencia: '2027-10-12', 
+    vehiculoId: 101, 
+    bloqueado: false,
+    historialVehiculos: [
+      { id: 'h1', vehiculoId: 101, conductorRut: '12.345.678-9', fechaInicio: '2023-01-01' }
+    ]
+  },
+  { 
+    rut: '98.765.432-1', 
+    nombre: 'Diego Soto', 
+    vencimientoLicencia: '2025-01-10', 
+    vehiculoId: 102, 
+    bloqueado: true, 
+    motivoBloqueo: 'Licencia vencida',
+    historialVehiculos: [
+      { id: 'h2', vehiculoId: 102, conductorRut: '98.765.432-1', fechaInicio: '2023-05-15' }
+    ]
+  },
 ];
 
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -102,7 +121,14 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const saved = localStorage.getItem('conductores');
       if (saved && saved !== 'undefined') {
         const parsed = JSON.parse(saved);
-        return parsed.map((c: any) => ({
+        // DEDUPLICACIÓN DE EMERGENCIA: Limpia duplicados accidentales por RUT
+        const uniqueMap = new Map();
+        parsed.forEach((c: any) => {
+          if (!uniqueMap.has(c.rut) || (c.vehiculoId && !uniqueMap.get(c.rut).vehiculoId)) {
+            uniqueMap.set(c.rut, c);
+          }
+        });
+        return Array.from(uniqueMap.values()).map((c: any) => ({
           ...c,
           bloqueado: c.bloqueado ?? false
         }));
@@ -191,9 +217,105 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const updateVehiculo = (v: Vehiculo) => setVehiculos(vehiculos.map(it => it.id === v.id ? v : it));
   const removeVehiculo = (id: number) => setVehiculos(vehiculos.filter(v => v.id !== id));
 
-  const addConductor = (c: Conductor) => setConductores([...conductores, c]);
-  const updateConductor = (c: Conductor) => setConductores(conductores.map(it => it.rut === c.rut ? c : it));
-  const removeConductor = (rut: string) => setConductores(conductores.filter(c => c.rut !== rut));
+  const addConductor = (c: Conductor) => {
+    setConductores(prev => {
+      // PREVENCIÓN DE DUPLICADOS: Si el RUT ya existe, no agregamos uno nuevo
+      if (prev.some(old => old.rut === c.rut)) {
+        return prev.map(old => old.rut === c.rut ? { ...old, ...c } : old);
+      }
+
+      // 1. Si se asigna a un vehículo, desvincular a otros que lo tengan
+      let nextBase = prev;
+      if (c.vehiculoId) {
+        nextBase = nextBase.map(old => {
+          if (old.vehiculoId === c.vehiculoId) {
+            const history = [...(old.historialVehiculos || [])];
+            if (history.length > 0) {
+              const lastIdx = history.length - 1;
+              if (!history[lastIdx].fechaFin) {
+                history[lastIdx].fechaFin = new Date().toISOString();
+              }
+            }
+            return { ...old, vehiculoId: undefined, historialVehiculos: history };
+          }
+          return old;
+        });
+      }
+
+      const freshConductor = {
+        ...c,
+        historialVehiculos: c.vehiculoId ? [{
+          id: crypto.randomUUID(),
+          vehiculoId: c.vehiculoId,
+          conductorRut: c.rut,
+          fechaInicio: new Date().toISOString()
+        }] : []
+      };
+
+      return [...nextBase, freshConductor];
+    });
+  };
+
+  const updateConductor = (updated: Conductor) => {
+    setConductores(prev => {
+      // 1. If assigned to a vehicle, unbind others
+      let next = prev;
+      if (updated.vehiculoId) {
+        next = next.map(c => {
+          if (c.rut !== updated.rut && c.vehiculoId === updated.vehiculoId) {
+            // This conductor was in the target vehicle, unbind them
+            const history = [...(c.historialVehiculos || [])];
+            if (history.length > 0) {
+              const lastIdx = history.length - 1;
+              if (!history[lastIdx].fechaFin) {
+                history[lastIdx].fechaFin = new Date().toISOString();
+              }
+            }
+            return { ...c, vehiculoId: undefined, historialVehiculos: history };
+          }
+          return c;
+        });
+      }
+
+      // 2. Update the target conductor
+      return next.map(old => {
+        if (old.rut !== updated.rut) return old;
+
+        // Detect vehicle change
+        if (old.vehiculoId !== updated.vehiculoId) {
+          const history = [...(old.historialVehiculos || [])];
+          
+          // Close last assignment if it existed
+          if (old.vehiculoId && history.length > 0) {
+            const lastIdx = history.length - 1;
+            if (!history[lastIdx].fechaFin) {
+              history[lastIdx].fechaFin = new Date().toISOString();
+            }
+          }
+
+          // Open new assignment
+          if (updated.vehiculoId) {
+            history.push({
+              id: crypto.randomUUID(),
+              vehiculoId: updated.vehiculoId,
+              conductorRut: updated.rut,
+              fechaInicio: new Date().toISOString()
+            });
+          }
+
+          return { ...updated, historialVehiculos: history };
+        }
+
+        return updated;
+      });
+    });
+  };
+  const removeConductor = (rut: string) => {
+    // Optionally we could keep them in a "soft delete" or just remove them.
+    // But since history is tied to the conductor object, removing them loses their history.
+    // For now, let's just remove them as per existing logic, but maybe we should close the assignment.
+    setConductores(prev => prev.filter(c => c.rut !== rut));
+  };
 
   const venderTarjeta = (vehiculoId: number, fechasUso?: string[]) => {
     const vehiculo = vehiculos.find(v => v.id === vehiculoId);
@@ -205,6 +327,14 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Validar Bloqueos
     if ((vehiculo.bloqueado || conductor.bloqueado) && !vehiculo.desbloqueoTemporal?.activo) {
       return { success: false, message: 'Venta bloqueada por administración.' };
+    }
+
+    // Validar Licencia Vencida
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    const fechaLicencia = new Date(conductor.vencimientoLicencia + 'T12:00:00');
+    if (fechaLicencia < hoy && !vehiculo.desbloqueoTemporal?.activo) {
+      return { success: false, message: `Bloqueado: Licencia del conductor (${conductor.nombre}) venció el ${conductor.vencimientoLicencia}.` };
     }
 
     const multasVencidas = multas.filter(m => 

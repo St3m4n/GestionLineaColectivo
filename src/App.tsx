@@ -3,8 +3,8 @@ import { StateProvider } from './contexts/StateContext';
 import Layout from './components/Layout';
 import InspectorView from './views/InspectorView';
 import AdminDashboard from './views/AdminDashboard';
-import GestionBloqueos from './views/GestionBloqueos';
-import GestionCRUD from './views/GestionCRUD';
+import GestionVehiculos from './views/GestionVehiculos';
+import GestionConductores from './views/GestionConductores';
 
 function App() {
   return (
@@ -15,8 +15,8 @@ function App() {
             <Route index element={<Navigate to="/inspector" replace />} />
             <Route path="inspector" element={<InspectorView />} />
             <Route path="admin" element={<AdminDashboard />} />
-            <Route path="admin/bloqueos" element={<GestionBloqueos />} />
-            <Route path="admin/gestion" element={<GestionCRUD />} />
+            <Route path="admin/vehiculos" element={<GestionVehiculos />} />
+            <Route path="admin/conductores" element={<GestionConductores />} />
           </Route>
         </Routes>
       </Router>

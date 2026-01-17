@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Search, ShieldAlert, Settings, Car } from 'lucide-react';
+import { LayoutDashboard, Search, ShieldAlert, Settings, Car, Users } from 'lucide-react';
 
 const Layout: React.FC = () => {
   const location = useLocation();
@@ -8,8 +8,8 @@ const Layout: React.FC = () => {
   const menuItems = [
     { path: '/inspector', label: 'Inspector', icon: Search },
     { path: '/admin', label: 'Dashboard Admin', icon: LayoutDashboard },
-    { path: '/admin/bloqueos', label: 'Bloqueos', icon: ShieldAlert },
-    { path: '/admin/gestion', label: 'Gestión CRUD', icon: Settings },
+    { path: '/admin/vehiculos', label: 'Ficha Vehículos', icon: Car },
+    { path: '/admin/conductores', label: 'Ficha Conductores', icon: Users },
   ];
 
   return (

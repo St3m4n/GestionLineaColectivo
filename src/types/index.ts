@@ -22,6 +22,15 @@ export interface Vehiculo {
     motivo: string;
     fecha: string; // ISO date de cuándo se levantó
   };
+  historialConductores?: HistorialAsignacion[];
+}
+
+export interface HistorialAsignacion {
+  id: string;
+  vehiculoId: number;
+  conductorRut: string;
+  fechaInicio: string;
+  fechaFin?: string;
 }
 
 export interface AuditoriaDesbloqueo {
@@ -38,6 +47,7 @@ export interface Conductor {
   vehiculoId?: number; // ID de línea asociado
   bloqueado: boolean;
   motivoBloqueo?: string;
+  historialVehiculos?: HistorialAsignacion[];
 }
 
 export interface TarjetaRuta {

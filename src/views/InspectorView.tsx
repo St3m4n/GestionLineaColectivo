@@ -56,7 +56,14 @@ const InspectorView: React.FC = () => {
     new Date(m.fechaVencimiento + 'T12:00:00') < new Date()
   ) : [];
 
-  const isBlocked = foundVehiculo && (foundVehiculo.bloqueado || (associatedConductor?.bloqueado) || multasVencidas.length > 0);
+  const isLicenseExpired = associatedConductor && new Date(associatedConductor.vencimientoLicencia + 'T12:00:00') < new Date().setHours(0,0,0,0);
+
+  const isBlocked = foundVehiculo && (
+    foundVehiculo.bloqueado || 
+    (associatedConductor?.bloqueado) || 
+    multasVencidas.length > 0 ||
+    isLicenseExpired
+  );
   const isTemporarilyUnblocked = foundVehiculo?.desbloqueoTemporal?.activo;
 
   // Resetear selección al cambiar de vehículo o detectar si hoy está disponible
@@ -71,6 +78,15 @@ const InspectorView: React.FC = () => {
         setSelectedDates([todayStr]);
       } else {
         setSelectedDates([]);
+      }
+
+      if (isBlocked && !isTemporarilyUnblocked) {
+        setMessage({ 
+          type: 'error', 
+          text: isLicenseExpired 
+            ? `ATENCIÓN: Licencia vencida (${associatedConductor?.vencimientoLicencia}). Venta bloqueada.` 
+            : 'ATENCIÓN: Vehículo bloqueado por administración o multas.' 
+        });
       }
     } else {
       setSelectedDates([]);
@@ -184,6 +200,10 @@ const InspectorView: React.FC = () => {
               <span className="text-slate-500">Servicio Hoy:</span> <span className="font-bold text-orange-600 uppercase italic">{foundVehiculo.rutaPrincipal || 'N/A'} / {currentVariacion}</span>
               <span className="text-slate-500">Multas Vencidas:</span> <span className={`font-bold ${multasVencidas.length > 0 ? 'text-red-600' : 'text-green-600'}`}>{multasVencidas.length}</span>
               <span className="text-slate-500">Deudas Pendientes:</span> <span className="font-bold text-red-600">${foundVehiculo.estadoCuenta?.deudas?.toLocaleString() || '0'}</span>
+              <span className="text-slate-500">Licencia Conductor:</span> 
+              <span className={`font-bold ${isLicenseExpired ? 'text-red-600' : 'text-green-600'}`}>
+                {associatedConductor?.vencimientoLicencia || 'N/A'} {isLicenseExpired && '(VENCIDA)'}
+              </span>
               <span className="text-slate-500">Estado:</span> 
               <span className={`font-bold ${isBlocked && !isTemporarilyUnblocked ? 'text-red-500' : 'text-green-500'}`}>
                 {isBlocked ? (isTemporarilyUnblocked ? 'DESBLOQUEO TEMP.' : 'BLOQUEADO') : 'HABILITADO'}
@@ -194,9 +214,11 @@ const InspectorView: React.FC = () => {
               <div className="space-y-3">
                 <div className="p-3 bg-red-50 border border-red-200 rounded-lg">
                   <p className="text-xs text-red-700 font-bold mb-1 uppercase text-center">⛔ Venta deshabilitada</p>
-                  <p className="text-[10px] text-red-600 italic text-center">
-                    {multasVencidas.length > 0 ? `Existen ${multasVencidas.length} multas con plazo de pago vencido.` : 'Bloqueo administrativo activo.'}
-                  </p>
+                  <div className="text-[10px] text-red-600 italic text-center space-y-1">
+                    {multasVencidas.length > 0 && <p>- Existen {multasVencidas.length} multas con plazo de pago vencido.</p>}
+                    {isLicenseExpired && <p>- La licencia del conductor está VENCIDA ({associatedConductor?.vencimientoLicencia}).</p>}
+                    {(foundVehiculo.bloqueado || associatedConductor?.bloqueado) && <p>- Bloqueo administrativo activo o conductor bloqueado.</p>}
+                  </div>
                 </div>
                 
                 {!showOverrideForm ? (
