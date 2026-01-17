@@ -1,28 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useStore } from '../contexts/StateContext';
-import { Search, Printer, UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Search, Printer, UserPlus, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const InspectorView: React.FC = () => {
   const { 
     vehiculos, conductores, venderTarjeta, getDynamicVariacion, 
     registrarMulta, multas, levantarBloqueoTemporal, 
-    printSettings 
+    printSettings, tarjetas, diasNoHabiles 
   } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error' | 'warning', text: string } | null>(null);
   const [showFinesForm, setShowFinesForm] = useState(false);
   const [showOverrideForm, setShowOverrideForm] = useState(false);
   const [overrideReason, setOverrideReason] = useState('');
-  const [cantidadVenta, setCantidadVenta] = useState(1);
+  
+  // Función para obtener fecha local en formato YYYY-MM-DD
+  const getLocalDateStr = (date: Date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Debounce para la búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [isReissue, setIsReissue] = useState(false);
+
   const [lastCardsSold, setLastCardsSold] = useState<any[]>([]);
+
   const [fineData, setFineData] = useState({ 
     monto: '5000', 
     motivo: '', 
     tipo: 'vehiculo' as 'vehiculo' | 'conductor',
-    fechaVencimiento: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] 
+    fechaVencimiento: getLocalDateStr(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
   });
 
-  const foundVehiculo = vehiculos.find(v => v.id.toString() === searchTerm);
+  const foundVehiculo = vehiculos.find(v => v.id.toString() === debouncedSearch);
   const associatedConductor = foundVehiculo ? conductores.find(c => c.vehiculoId === foundVehiculo.id) : null;
   const currentVariacion = foundVehiculo ? getDynamicVariacion(foundVehiculo.id) : 'Normal';
 
@@ -31,19 +53,89 @@ const InspectorView: React.FC = () => {
     m.vehiculoId === foundVehiculo.id && 
     !m.pagada && 
     m.fechaVencimiento && 
-    new Date(m.fechaVencimiento) < new Date()
+    new Date(m.fechaVencimiento + 'T12:00:00') < new Date()
   ) : [];
 
   const isBlocked = foundVehiculo && (foundVehiculo.bloqueado || (associatedConductor?.bloqueado) || multasVencidas.length > 0);
   const isTemporarilyUnblocked = foundVehiculo?.desbloqueoTemporal?.activo;
 
+  // Resetear selección al cambiar de vehículo o detectar si hoy está disponible
+  useEffect(() => {
+    if (foundVehiculo) {
+      const todayStr = getLocalDateStr(new Date());
+      const isTodaySold = tarjetas.some(t => t.vehiculoId === foundVehiculo.id && t.fechaUso?.split('T')[0] === todayStr);
+      const isTodayNonWork = diasNoHabiles.includes(todayStr);
+      
+      // Auto-seleccionar hoy si no está vendido y es día hábil
+      if (!isTodaySold && !isTodayNonWork) {
+        setSelectedDates([todayStr]);
+      } else {
+        setSelectedDates([]);
+      }
+    } else {
+      setSelectedDates([]);
+    }
+    setLastCardsSold([]);
+    setIsReissue(false);
+    setMessage(null);
+  }, [debouncedSearch, foundVehiculo?.id]); // Solo dependemos del ID o del debouncedSearch para no resetear al vender o cambiar días no hábiles en medio de la vista
+
+  // Autodisparar impresión al recibir tarjetas
+  useEffect(() => {
+    if (lastCardsSold.length > 0) {
+      const timer = setTimeout(() => {
+        window.print();
+      }, 150);
+      return () => clearTimeout(timer);
+    }
+  }, [lastCardsSold]);
+
   const handleVenta = () => {
     if (!foundVehiculo) return;
-    const result = venderTarjeta(foundVehiculo.id, cantidadVenta);
-    setMessage({ type: result.success ? 'success' : 'error', text: result.message });
+    if (selectedDates.length === 0) return setMessage({ type: 'error', text: 'Debe seleccionar al menos un día.' });
+    
+    const result = venderTarjeta(foundVehiculo.id, selectedDates);
     if (result.success) {
+      setIsReissue(false);
       setLastCardsSold((result as any).cards || []);
-      setCantidadVenta(1);
+      setSelectedDates([]); // Limpiar selección tras venta
+      setMessage({ type: 'success', text: result.message });
+    } else {
+      setMessage({ type: 'error', text: result.message });
+    }
+  };
+
+  // Lógica del mini-calendario
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const daysCount = new Date(year, month + 1, 0).getDate();
+    const days = [];
+    for (let i = 1; i <= daysCount; i++) {
+      days.push(getLocalDateStr(new Date(year, month, i)));
+    }
+    return days;
+  };
+
+  const toggleDate = (dateStr: string, isSold: boolean) => {
+    if (isSold) {
+      const ticket = tarjetas.find(t => t.vehiculoId === foundVehiculo?.id && t.fechaUso?.split('T')[0] === dateStr);
+      if (ticket) {
+        setIsReissue(true);
+        setLastCardsSold([ticket]);
+        // Si clickeamos un vendido, quitamos cualquier selección de nuevos días para evitar confusión
+        setSelectedDates([]);
+      }
+      return;
+    }
+
+    if (selectedDates.includes(dateStr)) {
+      setSelectedDates(selectedDates.filter(d => d !== dateStr));
+    } else {
+      // Si empezamos a seleccionar días nuevos, quitamos la vista de "reimpresión"
+      setIsReissue(false);
+      setLastCardsSold([]); 
+      setSelectedDates([...selectedDates, dateStr]);
     }
   };
 
@@ -148,29 +240,82 @@ const InspectorView: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <label className="text-[10px] font-black text-slate-400 uppercase">Cantidad de Tarjetas</label>
-                    <input 
-                      type="number" 
-                      min="1" 
-                      max="31"
-                      className="w-full p-2 border-2 border-slate-100 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none font-bold text-lg"
-                      value={cantidadVenta}
-                      onChange={e => setCantidadVenta(parseInt(e.target.value) || 1)}
-                    />
+                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-xs font-black uppercase text-slate-500">Calendario de Ventas</h4>
+                    <div className="flex gap-2">
+                      <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() - 1)))} className="p-1 hover:bg-slate-200 rounded"><ChevronLeft size={16} /></button>
+                      <span className="text-xs font-bold w-24 text-center uppercase">{currentMonth.toLocaleString('default', { month: 'short', year: 'numeric' })}</span>
+                      <button onClick={() => setCurrentMonth(new Date(currentMonth.setMonth(currentMonth.getMonth() + 1)))} className="p-1 hover:bg-slate-200 rounded"><ChevronRight size={16} /></button>
+                    </div>
                   </div>
-                  <div className="flex-1 pt-4 text-right">
-                    <p className="text-[10px] text-slate-400 uppercase font-bold text-right">Total a Pagar</p>
-                    <p className="text-2xl font-black text-slate-800">${(cantidadVenta * 2500).toLocaleString()}</p>
+                  
+                  <div className="grid grid-cols-7 gap-1 text-center mb-2">
+                    {['L','M','M','J','V','S','D'].map(d => <span key={d} className="text-[10px] font-black text-slate-400">{d}</span>)}
+                  </div>
+                  
+                  <div className="grid grid-cols-7 gap-1">
+                    {/* Padding inicial para el primer día de la semana (ajustado para que Lunes sea 0) */}
+                    {Array.from({ length: (new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1).getDay() + 6) % 7 }).map((_, i) => <div key={`pad-${i}`} />)}
+                    
+                    {getDaysInMonth(currentMonth).map(dateStr => {
+                      const isSold = tarjetas.some(t => t.vehiculoId === foundVehiculo.id && t.fechaUso?.split('T')[0] === dateStr);
+                      const isNonWork = diasNoHabiles.includes(dateStr);
+                      const isSelected = selectedDates.includes(dateStr);
+                      const isToday = dateStr === getLocalDateStr(new Date());
+                      const dayNumber = parseInt(dateStr.split('-')[2]);
+                      
+                      return (
+                        <button
+                          key={dateStr}
+                          title={isNonWork ? 'Día No Mábil' : isToday ? 'HOY' : isSold ? 'Ya vendido - Click para reimprimir' : ''}
+                          disabled={isNonWork}
+                          onClick={() => toggleDate(dateStr, isSold)}
+                          className={`
+                            h-8 rounded-lg text-xs font-bold transition-all relative group
+                            ${isToday ? 'ring-2 ring-emerald-500 ring-offset-2 z-30 shadow-sm' : ''}
+                            ${isNonWork ? 'bg-slate-100 text-slate-300 cursor-not-allowed opacity-50' :
+                              isSelected ? 'bg-orange-600 text-white shadow-md scale-110' : 
+                              isSold ? 'bg-orange-100 text-orange-600 border border-orange-200 cursor-help' : 
+                              'bg-white hover:bg-orange-50 border border-slate-100'}
+                          `}
+                        >
+                          {dayNumber}
+                          {isToday && (
+                            <div className="absolute -top-1 -right-1 flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </div>
+                          )}
+                          {isSold && (
+                            <span className="invisible group-hover:visible absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[8px] px-2 py-1 rounded whitespace-nowrap z-50 shadow-xl">
+                              VENDIDO - REIMPRIMIR
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
+
+                <div className="flex items-center justify-between px-2">
+                  <div>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold">Días Seleccionados</p>
+                    <p className="text-lg font-black text-slate-800">{selectedDates.length}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[10px] text-slate-400 uppercase font-bold">Total Venta</p>
+                    <p className="text-xl font-black text-orange-600">${(selectedDates.length * 2500).toLocaleString()}</p>
+                  </div>
+                </div>
+
                 <button
                   onClick={handleVenta}
-                  className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-200 transition-all active:scale-95 disabled:bg-slate-300"
+                  disabled={selectedDates.length === 0}
+                  className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-orange-200 transition-all active:scale-95 disabled:bg-slate-200 disabled:text-slate-400"
                 >
                   <Printer size={20} />
-                  Emitir {cantidadVenta} Tarjeta(s)
+                  Emitir {selectedDates.length} Tarjeta(s)
                 </button>
               </div>
             )}
@@ -302,12 +447,12 @@ const InspectorView: React.FC = () => {
                     className="w-full md:w-auto flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-xl font-black hover:bg-black transition-all shadow-lg active:scale-95"
                   >
                     <Printer size={20} />
-                    IMPRIMIR {lastCardsSold.length} TICKET(S)
+                    {isReissue ? 'REIMPRIMIR' : 'IMPRIMIR'} {lastCardsSold.length} TICKET(S)
                   </button>
                 </div>
               )}
 
-              <div id="print-area" className="space-y-6 mode-preprinted">
+              <div id="print-area" className="hidden print:block mode-preprinted">
                 {(lastCardsSold.length > 0 ? lastCardsSold : [{
                   id: 0,
                   folio: `F-XXXXXX-${foundVehiculo.id}`,
@@ -320,52 +465,39 @@ const InspectorView: React.FC = () => {
                 }]).map((ticket, idx) => (
                   <div key={ticket.id || idx} className="ticket-print bg-white p-8 rounded-xl shadow-lg border-2 border-dashed border-slate-300 relative overflow-hidden">
                     {/* Indicador de copia (no se imprime) */}
-                    <div className="absolute top-0 right-0 bg-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-bl-lg uppercase no-print">
-                      Tarjeta {idx + 1} de {lastCardsSold.length || 1}
+                    <div className="absolute top-0 right-0 bg-slate-900 text-white text-[10px] font-black px-3 py-1 rounded-bl-lg uppercase no-print">
+                      COPIA {idx + 1}
                     </div>
 
-                    <div className="flex justify-between items-start border-b-2 border-slate-800 pb-4 mb-6 header-section">
+                    <div className="flex justify-between items-start border-b border-slate-100 pb-4 mb-6 header-section">
                       <div>
-                        <h4 className="text-2xl font-black uppercase tracking-tighter label-fixed">Tarjeta de Ruta</h4>
-                        <p className="text-sm font-mono text-slate-500 label-fixed">LINEA 8 - TAXIS COLECTIVOS</p>
+                        {/* Headers eliminados para modo pre-impreso */}
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-red-600 relative">
-                          <span className="label-fixed">Folio: </span>
+                        <p className="text-lg font-bold text-red-600 relative min-h-[1.5em]">
                           <span className="value-dynamic" style={{ position: 'absolute', top: printSettings.folio.top, left: printSettings.folio.left, fontSize: printSettings.folio.fontSize }}>{ticket.folio}</span>
                         </p>
-                        <p className="text-xs text-slate-500 relative">
-                          <span className="label-fixed">Emisión: </span>
+                        <p className="text-xs text-slate-500 relative min-h-[1em]">
                           <span className="value-dynamic" style={{ position: 'absolute', top: printSettings.fechaEmision.top, left: printSettings.fechaEmision.left, fontSize: printSettings.fechaEmision.fontSize }}>{new Date(ticket.fechaEmision).toLocaleDateString()}</span>
                         </p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-4 gap-8 py-4 data-section">
-                      <div className="field-group relative">
-                        <p className="text-[10px] uppercase text-slate-500 mb-1 label-fixed">Vehículo</p>
+                      <div className="field-group relative min-h-[4em]">
                         <p className="text-2xl font-black value-dynamic" style={{ position: 'absolute', top: printSettings.vehiculoId.top, left: printSettings.vehiculoId.left, fontSize: printSettings.vehiculoId.fontSize }}>#{ticket.vehiculoId}</p>
-                        <p className="text-sm value-dynamic label-fixed">{foundVehiculo?.patente}</p>
+                        <p className="text-sm value-dynamic">{foundVehiculo?.patente}</p>
                       </div>
-                      <div className="field-group relative">
-                        <p className="text-[10px] uppercase text-slate-500 mb-1 label-fixed">Válida Para</p>
+                      <div className="field-group relative min-h-[4em]">
                         <p className="text-lg font-black uppercase value-dynamic" style={{ position: 'absolute', top: printSettings.fechaUso.top, left: printSettings.fechaUso.left, fontSize: printSettings.fechaUso.fontSize }}>{new Date(ticket.fechaUso).toLocaleDateString()}</p>
                         <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize }}>{ticket.variacion}</p>
                       </div>
-                      <div className="field-group col-span-1 relative">
-                        <p className="text-[10px] uppercase text-slate-500 mb-1 label-fixed">Conductor</p>
+                      <div className="field-group col-span-1 relative min-h-[4em]">
                         <p className="text-sm font-bold value-dynamic" style={{ position: 'absolute', top: printSettings.conductor.top, left: printSettings.conductor.left, fontSize: printSettings.conductor.fontSize }}>{ticket.nombreConductor}</p>
                       </div>
                       <div className="text-right field-group">
-                        <p className="text-[10px] uppercase text-slate-500 mb-1 label-fixed">Valor</p>
-                        <p className="text-2xl font-black value-dynamic label-fixed">${ticket.valor.toLocaleString()}</p>
+                        <p className="text-2xl font-black value-dynamic">${ticket.valor.toLocaleString()}</p>
                       </div>
-                    </div>
-
-                    <div className="mt-8 pt-4 border-t border-slate-200 text-center footer-section">
-                      <p className="text-[10px] text-slate-400 italic label-fixed">
-                        {lastCardsSold.length > 0 ? 'Venta confirmada. Mantener en lugar visible.' : 'Vista previa de impresión.'}
-                      </p>
                     </div>
                   </div>
                 ))}

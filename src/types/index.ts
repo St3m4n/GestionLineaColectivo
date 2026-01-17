@@ -67,7 +67,8 @@ export interface Multa {
 export interface Venta {
   id: string;
   vehiculoId: number;
-  fecha: string;
+  fechaEmision: string; // Cuándo se pagó
+  fechaUso: string;    // Día para el que es válida la tarjeta (YYYY-MM-DD)
   monto: number;
 }
 

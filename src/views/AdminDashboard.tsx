@@ -1,21 +1,29 @@
 import React, { useMemo } from 'react';
 import { useStore } from '../contexts/StateContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search } from 'lucide-react';
+import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import type { Multa } from '../types';
 
 const AdminDashboard: React.FC = () => {
     const {
         tarjetas, vehiculos, conductores, registrarPago, multas,
         pagarMulta, updateMulta, removeMulta, auditoriaDesbloqueos,
-        printSettings, updatePrintSettings
+        printSettings, updatePrintSettings, diasNoHabiles, toggleDiaNoHabil
     } = useStore();
-    const [activeAdminTab, setActiveAdminTab] = React.useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion'>('resumen');
+    const [activeAdminTab, setActiveAdminTab] = React.useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario'>('resumen');
 
     // Estado para edición de multas
     const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
     const [editFineFormData, setEditFineFormData] = React.useState<Partial<Multa>>({});
     const [auditFilter, setAuditFilter] = React.useState('');
+    const [calMonth, setCalMonth] = React.useState(new Date());
+
+    const getLocalDateStr = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const filteredAuditoria = useMemo(() => {
         return auditoriaDesbloqueos.filter(a =>
@@ -123,6 +131,9 @@ const AdminDashboard: React.FC = () => {
                 </button>
                 <button onClick={() => setActiveAdminTab('impresion')} className={`pb-2 font-bold transition ${activeAdminTab === 'impresion' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
                     Config. Impresión
+                </button>
+                <button onClick={() => setActiveAdminTab('calendario')} className={`pb-2 font-bold transition ${activeAdminTab === 'calendario' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
+                    Días Feriados
                 </button>
             </div>
 
@@ -682,6 +693,74 @@ const AdminDashboard: React.FC = () => {
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            )}
+
+            {activeAdminTab === 'calendario' && (
+                <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
+                    <div className="flex justify-between items-center mb-8 border-b pb-4">
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                <Calendar className="text-orange-500" size={24} />
+                                Gestión de Días No Hábiles (Feriados)
+                            </h3>
+                            <p className="text-sm text-slate-500">Marca los días en los que NO se deben emitir tarjetas de ruta.</p>
+                        </div>
+                    </div>
+
+                    <div className="max-w-md mx-auto bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                        {(() => {
+                            const daysCount = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+                            const days = [];
+                            for (let i = 1; i <= daysCount; i++) {
+                                days.push(getLocalDateStr(new Date(calMonth.getFullYear(), calMonth.getMonth(), i)));
+                            }
+
+                            const firstDay = (new Date(calMonth.getFullYear(), calMonth.getMonth(), 1).getDay() + 6) % 7;
+
+                            return (
+                                <>
+                                    <div className="flex justify-between items-center mb-6">
+                                        <button onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1))} className="p-2 hover:bg-white rounded-full transition shadow-sm"><ChevronLeft size={20} /></button>
+                                        <span className="text-lg font-black uppercase text-slate-700">{calMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                                        <button onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1))} className="p-2 hover:bg-white rounded-full transition shadow-sm"><ChevronRight size={20} /></button>
+                                    </div>
+
+                                    <div className="grid grid-cols-7 gap-2 text-center mb-4">
+                                        {['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(d => <span key={d} className="text-xs font-black text-slate-400">{d}</span>)}
+                                    </div>
+
+                                    <div className="grid grid-cols-7 gap-2">
+                                        {Array.from({ length: firstDay }).map((_, i) => <div key={`p-${i}`} />)}
+                                        {days.map(dStr => {
+                                            const isNonWork = diasNoHabiles.includes(dStr);
+                                            const isToday = dStr === getLocalDateStr(new Date());
+                                            const dayNum = parseInt(dStr.split('-')[2]);
+
+                                            return (
+                                                <button
+                                                    key={dStr}
+                                                    onClick={() => toggleDiaNoHabil(dStr)}
+                                                    className={`
+                                                        h-12 rounded-xl text-sm font-bold transition-all
+                                                        ${isNonWork ? 'bg-red-500 text-white shadow-lg shadow-red-200 scale-105' : 
+                                                          isToday ? 'bg-white border-2 border-orange-400 text-orange-600' :
+                                                          'bg-white hover:bg-orange-50 text-slate-600 border border-slate-100'}
+                                                    `}
+                                                >
+                                                    {dayNum}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+                                    <div className="mt-8 flex flex-col gap-2 p-4 bg-white rounded-xl border border-slate-100 italic text-[11px] text-slate-400">
+                                        <p className="flex items-center gap-2 font-bold"><div className="w-3 h-3 bg-red-500 rounded" /> Rojo: Días bloqueados (No hábiles)</p>
+                                        <p>Los días en rojo no permitirán al inspector emitir tarjetas.</p>
+                                    </div>
+                                </>
+                            );
+                        })()}
                     </div>
                 </div>
             )}

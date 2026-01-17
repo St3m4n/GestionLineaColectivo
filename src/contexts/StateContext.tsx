@@ -16,9 +16,9 @@ interface StateContextType {
   addConductor: (c: Conductor) => void;
   updateConductor: (c: Conductor) => void;
   removeConductor: (rut: string) => void;
-  venderTarjeta: (vehiculoId: number, cantidad?: number) => { success: boolean; message: string };
+  venderTarjeta: (vehiculoId: number, fechasUso?: string[]) => { success: boolean; message: string; cards?: TarjetaRuta[] };
   getMonthlyBalance: (vehiculoId: number) => number;
-  getDynamicVariacion: (vehiculoId: number) => VariacionRuta;
+  getDynamicVariacion: (vehiculoId: number, baseDate?: Date) => VariacionRuta;
   registrarPago: (vehiculoId: number, monto: number, tipo: 'deuda' | 'multa') => void;
   registrarMulta: (vehiculoId: number, conductorRut: string, monto: number, motivo: string, tipo: 'vehiculo' | 'conductor', fechaVencimiento?: string) => void;
   updateMulta: (m: Multa) => void;
@@ -27,6 +27,8 @@ interface StateContextType {
   levantarBloqueoTemporal: (vehiculoId: number, motivo: string) => void;
   printSettings: PrintSettings;
   updatePrintSettings: (field: keyof PrintSettings, values: Partial<{ top: number, left: number, fontSize: number }>) => void;
+  diasNoHabiles: string[];
+  toggleDiaNoHabil: (fecha: string) => void;
 }
 
 const DEFAULT_PRINT_SETTINGS: PrintSettings = {
@@ -144,6 +146,19 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }));
   };
 
+  const [diasNoHabiles, setDiasNoHabiles] = useState<string[]>(() => {
+    try {
+      const saved = localStorage.getItem('dias_no_habiles');
+      return saved && saved !== 'undefined' ? JSON.parse(saved) : [];
+    } catch { return []; }
+  });
+
+  const toggleDiaNoHabil = (fecha: string) => {
+    setDiasNoHabiles(prev => 
+      prev.includes(fecha) ? prev.filter(d => d !== fecha) : [...prev, fecha]
+    );
+  };
+
   useEffect(() => {
     localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
   }, [vehiculos]);
@@ -168,6 +183,10 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('print_settings', JSON.stringify(printSettings));
   }, [printSettings]);
 
+  useEffect(() => {
+    localStorage.setItem('dias_no_habiles', JSON.stringify(diasNoHabiles));
+  }, [diasNoHabiles]);
+
   const addVehiculo = (v: Vehiculo) => setVehiculos([...vehiculos, v]);
   const updateVehiculo = (v: Vehiculo) => setVehiculos(vehiculos.map(it => it.id === v.id ? v : it));
   const removeVehiculo = (id: number) => setVehiculos(vehiculos.filter(v => v.id !== id));
@@ -176,14 +195,14 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const updateConductor = (c: Conductor) => setConductores(conductores.map(it => it.rut === c.rut ? c : it));
   const removeConductor = (rut: string) => setConductores(conductores.filter(c => c.rut !== rut));
 
-  const venderTarjeta = (vehiculoId: number, cantidad: number = 1) => {
+  const venderTarjeta = (vehiculoId: number, fechasUso?: string[]) => {
     const vehiculo = vehiculos.find(v => v.id === vehiculoId);
     if (!vehiculo) return { success: false, message: 'Vehículo no encontrado' };
 
     const conductor = conductores.find(c => c.vehiculoId === vehiculoId);
     if (!conductor) return { success: false, message: 'No hay conductor asociado a este vehículo' };
 
-    // Validar Bloqueos (Manuales o por Multas)
+    // Validar Bloqueos
     if ((vehiculo.bloqueado || conductor.bloqueado) && !vehiculo.desbloqueoTemporal?.activo) {
       return { success: false, message: 'Venta bloqueada por administración.' };
     }
@@ -196,30 +215,35 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       return { success: false, message: `Bloqueado por ${multasVencidas.length} multas vencidas.` };
     }
 
-    const nuevasTarjetas: TarjetaRuta[] = [];
-    const totalVenta = 2500 * cantidad;
+    // Si no se pasan fechas, se asume el día de hoy (comportamiento anterior si no se actualiza el componente)
+    const targetDates = fechasUso || [new Date().toISOString().split('T')[0]];
+    
+    // Evitar duplicados para seguridad aunque el front lo prevenga
+    const alreadySold = targetDates.some(d => 
+      tarjetas.some(t => t.vehiculoId === vehiculoId && t.fechaUso?.split('T')[0] === d)
+    );
 
-    for (let i = 0; i < cantidad; i++) {
-      const fechaUso = new Date();
-      fechaUso.setDate(fechaUso.getDate() + i);
-      
-      const variacionParaEseDia = getDynamicVariacion(vehiculoId, fechaUso);
+    if (alreadySold) return { success: false, message: 'Una o más fechas ya tienen una tarjeta emitida.' };
 
-      nuevasTarjetas.push({
+    const nuevasTarjetas: TarjetaRuta[] = targetDates.map((dateStr, i) => {
+      const fechaUsoDate = new Date(dateStr + 'T12:00:00'); // Usar mediodía para evitar desfases de zona horaria
+      const variacionParaEseDia = getDynamicVariacion(vehiculoId, fechaUsoDate);
+
+      return {
         id: Date.now() + i,
         folio: `F-${Math.floor(1000 + Math.random() * 9000)}-${vehiculoId}`,
         vehiculoId,
         nombreConductor: conductor.nombre,
         fechaEmision: new Date().toISOString(),
-        fechaUso: fechaUso.toISOString(),
+        fechaUso: fechaUsoDate.toISOString(),
         variacion: variacionParaEseDia,
         valor: 2500
-      });
-    }
+      };
+    });
 
     setTarjetas(prev => [...prev, ...nuevasTarjetas]);
     
-    // Actualizar estado de cuenta y limpiar desbloqueo temporal
+    const totalVenta = 2500 * targetDates.length;
     setVehiculos(prev => prev.map(v => 
       v.id === vehiculoId 
         ? { 
@@ -235,7 +259,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     return { 
       success: true, 
-      message: `${cantidad} tarjeta(s) vendida(s) con éxito.`,
+      message: `${targetDates.length} tarjeta(s) vendida(s) con éxito.`,
       cards: nuevasTarjetas 
     };
   };
@@ -424,7 +448,9 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       registrarPago, registrarMulta, updateMulta, removeMulta, pagarMulta,
       levantarBloqueoTemporal,
       printSettings,
-      updatePrintSettings
+      updatePrintSettings,
+      diasNoHabiles,
+      toggleDiaNoHabil
     }}>
       {children}
     </StateContext.Provider>
