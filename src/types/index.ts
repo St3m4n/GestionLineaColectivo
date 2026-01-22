@@ -1,5 +1,5 @@
-export type RutaPrincipal = 'Troncal' | 'Variante';
-export type VariacionRuta = 'Normal' | 'L' | 'R';
+export type RutaPrincipal = 'Troncal' | 'Variante 2';
+export type VariacionRuta = 'T' | 'L' | 'R' | 'Normal' | 'V2';
 
 export interface Vehiculo {
   id: number; // Número de línea/cupo (1-250)
@@ -48,6 +48,17 @@ export interface Conductor {
   bloqueado: boolean;
   motivoBloqueo?: string;
   historialVehiculos?: HistorialAsignacion[];
+  agregadoPorInspector?: boolean; // Label para conductores registrados en terreno
+}
+
+export interface AuditoriaAsignacion {
+  id: string;
+  vehiculoId: number;
+  conductorRut: string;
+  conductorNombre: string;
+  fecha: string;
+  tipo: 'cambio' | 'nuevo';
+  realizadoPor: 'administrador' | 'inspector';
 }
 
 export interface TarjetaRuta {

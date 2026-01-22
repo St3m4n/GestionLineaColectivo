@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useStore } from '../contexts/StateContext';
-import { Search, Printer, UserPlus, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Search, Printer, UserPlus, AlertCircle, CheckCircle2, ChevronLeft, ChevronRight, UserCog, Save, X, Ticket, TrendingUp } from 'lucide-react';
 
 const InspectorView: React.FC = () => {
   const { 
     vehiculos, conductores, venderTarjeta, getDynamicVariacion, 
     registrarMulta, multas, levantarBloqueoTemporal, 
-    printSettings, tarjetas, diasNoHabiles 
+    printSettings, tarjetas, diasNoHabiles, addConductor, updateConductor,
+    asignacionesR 
   } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -14,6 +15,13 @@ const InspectorView: React.FC = () => {
   const [showFinesForm, setShowFinesForm] = useState(false);
   const [showOverrideForm, setShowOverrideForm] = useState(false);
   const [overrideReason, setOverrideReason] = useState('');
+
+  const [showDriverForm, setShowDriverForm] = useState(false);
+  const [driverFormData, setDriverFormData] = useState({
+      rut: '',
+      nombre: '',
+      vencimientoLicencia: ''
+  });
   
   // Función para obtener fecha local en formato YYYY-MM-DD
   const getLocalDateStr = (date: Date) => {
@@ -44,9 +52,27 @@ const InspectorView: React.FC = () => {
     fechaVencimiento: getLocalDateStr(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000))
   });
 
+  const [reissueConfirm, setReissueConfirm] = useState<{show: boolean, date: string}>({show: false, date: ''});
+  const [ventaConfirm, setVentaConfirm] = useState(false);
+
+  const currentDayR = useMemo(() => {
+    const dateStr = getLocalDateStr(new Date());
+    if (asignacionesR && asignacionesR[dateStr]) return asignacionesR[dateStr].sort((a,b) => a-b);
+    
+    return vehiculos
+      .filter(v => getDynamicVariacion(v.id) === 'R')
+      .map(v => v.id)
+      .sort((a, b) => a - b);
+  }, [asignacionesR, vehiculos, getDynamicVariacion]);
+
   const foundVehiculo = vehiculos.find(v => v.id.toString() === debouncedSearch);
   const associatedConductor = foundVehiculo ? conductores.find(c => c.vehiculoId === foundVehiculo.id) : null;
   const currentVariacion = foundVehiculo ? getDynamicVariacion(foundVehiculo.id) : 'Normal';
+
+  const formatRouteDisplay = (v: any, variacion: string) => {
+    if (variacion === 'R') return 'Variante 1';
+    return `${v.rutaPrincipal} ${variacion}`;
+  };
 
   // Verificar multas vencidas
   const multasVencidas = foundVehiculo ? multas.filter(m => 
@@ -81,11 +107,17 @@ const InspectorView: React.FC = () => {
       }
 
       if (isBlocked && !isTemporarilyUnblocked) {
+        let errorText = 'ATENCIÓN: Vehículo bloqueado por administración o multas.';
+        
+        if (isLicenseExpired) {
+          errorText = `ATENCIÓN: Licencia vencida (${associatedConductor?.vencimientoLicencia}). Venta bloqueada.`;
+        } else if (foundVehiculo.bloqueado && foundVehiculo.motivoBloqueo) {
+          errorText = `ATENCIÓN: Vehículo BLOQUEADO (${foundVehiculo.motivoBloqueo}).`;
+        }
+
         setMessage({ 
           type: 'error', 
-          text: isLicenseExpired 
-            ? `ATENCIÓN: Licencia vencida (${associatedConductor?.vencimientoLicencia}). Venta bloqueada.` 
-            : 'ATENCIÓN: Vehículo bloqueado por administración o multas.' 
+          text: errorText
         });
       }
     } else {
@@ -109,7 +141,11 @@ const InspectorView: React.FC = () => {
   const handleVenta = () => {
     if (!foundVehiculo) return;
     if (selectedDates.length === 0) return setMessage({ type: 'error', text: 'Debe seleccionar al menos un día.' });
-    
+    setVentaConfirm(true);
+  };
+
+  const confirmVenta = () => {
+    if (!foundVehiculo) return;
     const result = venderTarjeta(foundVehiculo.id, selectedDates);
     if (result.success) {
       setIsReissue(false);
@@ -119,6 +155,33 @@ const InspectorView: React.FC = () => {
     } else {
       setMessage({ type: 'error', text: result.message });
     }
+    setVentaConfirm(false);
+  };
+
+  const handleDriverAssignment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!foundVehiculo || !driverFormData.rut || !driverFormData.nombre) return;
+
+    const existing = conductores.find(c => c.rut === driverFormData.rut);
+    if (existing) {
+        updateConductor({
+            ...existing,
+            nombre: driverFormData.nombre,
+            vencimientoLicencia: driverFormData.vencimientoLicencia || existing.vencimientoLicencia || '2099-01-01',
+            vehiculoId: foundVehiculo.id
+        }, 'inspector');
+    } else {
+        addConductor({
+            rut: driverFormData.rut,
+            nombre: driverFormData.nombre,
+            vencimientoLicencia: driverFormData.vencimientoLicencia || '2099-01-01',
+            vehiculoId: foundVehiculo.id,
+            bloqueado: false
+        }, 'inspector');
+    }
+
+    setShowDriverForm(false);
+    setMessage({ type: 'success', text: 'Conductor asignado y registrado en auditoría.' });
   };
 
   // Lógica del mini-calendario
@@ -135,13 +198,7 @@ const InspectorView: React.FC = () => {
 
   const toggleDate = (dateStr: string, isSold: boolean) => {
     if (isSold) {
-      const ticket = tarjetas.find(t => t.vehiculoId === foundVehiculo?.id && t.fechaUso?.split('T')[0] === dateStr);
-      if (ticket) {
-        setIsReissue(true);
-        setLastCardsSold([ticket]);
-        // Si clickeamos un vendido, quitamos cualquier selección de nuevos días para evitar confusión
-        setSelectedDates([]);
-      }
+      setReissueConfirm({show: true, date: dateStr});
       return;
     }
 
@@ -153,6 +210,17 @@ const InspectorView: React.FC = () => {
       setLastCardsSold([]); 
       setSelectedDates([...selectedDates, dateStr]);
     }
+  };
+
+  const confirmReissue = () => {
+    const { date } = reissueConfirm;
+    const ticket = tarjetas.find(t => t.vehiculoId === foundVehiculo?.id && t.fechaUso?.split('T')[0] === date);
+    if (ticket) {
+      setIsReissue(true);
+      setLastCardsSold([ticket]);
+      setSelectedDates([]);
+    }
+    setReissueConfirm({show: false, date: ''});
   };
 
   return (
@@ -179,6 +247,39 @@ const InspectorView: React.FC = () => {
         </div>
       </div>
 
+      {/* Lista de Vehículos en Variante R hoy */}
+      <div className="bg-slate-900 p-4 rounded-xl shadow-lg border-b-4 border-orange-500 no-print">
+        <div className="flex items-baseline justify-between mb-3 border-b border-slate-700 pb-2">
+          <h3 className="text-orange-400 font-black text-xs uppercase tracking-widest flex items-center gap-2">
+            <TrendingUp size={14} />
+            Variante R / HOY: {new Date().toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
+          </h3>
+          <span className="text-[10px] text-slate-400 font-bold uppercase">{currentDayR.length} Vehículos</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {currentDayR.length > 0 ? (
+            currentDayR.map(id => {
+              const v = vehiculos.find(v => v.id === id);
+              return (
+                <button 
+                  key={id}
+                  onClick={() => setSearchTerm(id.toString())}
+                  className={`px-3 py-1.5 rounded-lg font-black text-sm transition-all border-2 
+                    ${searchTerm === id.toString() 
+                      ? 'bg-orange-500 text-white border-orange-400 scale-105 shadow-lg shadow-orange-900/20' 
+                      : 'bg-slate-800 text-slate-300 border-slate-700 hover:border-orange-500/50 hover:text-white'}`}
+                >
+                  #{id}
+                  {v && <span className="block text-[8px] opacity-70 font-bold uppercase">{v.patente}</span>}
+                </button>
+              );
+            })
+          ) : (
+            <p className="text-xs text-slate-500 italic">No hay vehículos asignados a Variante R para hoy.</p>
+          )}
+        </div>
+      </div>
+
       {message && (
         <div className={`p-4 rounded-lg flex items-center gap-3 no-print ${
           message.type === 'success' ? 'bg-green-50 text-green-700' : 
@@ -194,16 +295,11 @@ const InspectorView: React.FC = () => {
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4 no-print">
             <h3 className="text-lg font-semibold border-b pb-2">Información del Vehículo</h3>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <span className="text-slate-500">Número:</span> <span className="font-medium">{foundVehiculo.id}</span>
+              <span className="text-slate-500">Vehículo:</span> <span className="font-medium">{foundVehiculo.id} - {foundVehiculo.patente}</span>
               <span className="text-slate-500">Propietario:</span> <span className="font-bold text-slate-800 uppercase text-[10px]">{foundVehiculo.propietario}</span>
-              <span className="text-slate-500">Patente:</span> <span className="font-medium">{foundVehiculo.patente}</span>
-              <span className="text-slate-500">Servicio Hoy:</span> <span className="font-bold text-orange-600 uppercase italic">{foundVehiculo.rutaPrincipal || 'N/A'} / {currentVariacion}</span>
+              <span className="text-slate-500">Servicio Hoy:</span> <span className="font-bold text-orange-600 uppercase italic">{formatRouteDisplay(foundVehiculo, currentVariacion)}</span>
               <span className="text-slate-500">Multas Vencidas:</span> <span className={`font-bold ${multasVencidas.length > 0 ? 'text-red-600' : 'text-green-600'}`}>{multasVencidas.length}</span>
               <span className="text-slate-500">Deudas Pendientes:</span> <span className="font-bold text-red-600">${foundVehiculo.estadoCuenta?.deudas?.toLocaleString() || '0'}</span>
-              <span className="text-slate-500">Licencia Conductor:</span> 
-              <span className={`font-bold ${isLicenseExpired ? 'text-red-600' : 'text-green-600'}`}>
-                {associatedConductor?.vencimientoLicencia || 'N/A'} {isLicenseExpired && '(VENCIDA)'}
-              </span>
               <span className="text-slate-500">Estado:</span> 
               <span className={`font-bold ${isBlocked && !isTemporarilyUnblocked ? 'text-red-500' : 'text-green-500'}`}>
                 {isBlocked ? (isTemporarilyUnblocked ? 'DESBLOQUEO TEMP.' : 'BLOQUEADO') : 'HABILITADO'}
@@ -419,7 +515,7 @@ const InspectorView: React.FC = () => {
                       monto: '5000', 
                       motivo: '', 
                       tipo: 'vehiculo', 
-                      fechaVencimiento: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0] 
+                      fechaVencimiento: getLocalDateStr(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)) 
                     });
                     setMessage({ type: 'success', text: `Multa registrada al ${fineData.tipo} correctamente.` });
                   }}
@@ -432,14 +528,36 @@ const InspectorView: React.FC = () => {
           </div>
 
           {/* Conductor Asociado */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4 no-print">
-            <h3 className="text-lg font-semibold border-b pb-2">Conductor Asociado</h3>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 space-y-4 no-print relative">
+            <div className="flex justify-between items-center border-b pb-2">
+              <h3 className="text-lg font-semibold">Conductor Asociado</h3>
+              {foundVehiculo && (
+                <button 
+                  onClick={() => {
+                    setDriverFormData({ 
+                      rut: associatedConductor?.rut || '', 
+                      nombre: associatedConductor?.nombre || '', 
+                      vencimientoLicencia: associatedConductor?.vencimientoLicencia || '' 
+                    });
+                    setShowDriverForm(true);
+                  }}
+                  className="flex items-center gap-1 text-blue-600 hover:text-blue-800 text-sm font-bold bg-blue-50 px-3 py-1 rounded-lg transition"
+                >
+                  {associatedConductor ? <UserCog size={16} /> : <UserPlus size={16} />}
+                  {associatedConductor ? 'Cambiar' : 'Asignar'}
+                </button>
+              )}
+            </div>
+            
             {associatedConductor ? (
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <span className="text-slate-500">Nombre:</span> <span className="font-medium">{associatedConductor.nombre}</span>
                   <span className="text-slate-500">RUT:</span> <span className="font-medium">{associatedConductor.rut}</span>
-                  <span className="text-slate-500">Licencia:</span> <span className="font-medium">{associatedConductor.vencimientoLicencia}</span>
+                  <span className="text-slate-500">Licencia:</span> 
+                  <span className={`font-bold ${isLicenseExpired ? 'text-red-600' : 'text-green-600'}`}>
+                    {associatedConductor.vencimientoLicencia} {isLicenseExpired && '(VENCIDA)'}
+                  </span>
                 </div>
                 {associatedConductor.bloqueado && (
                   <div className="mt-2 p-2 bg-red-50 border border-red-100 rounded text-red-600 text-xs">
@@ -448,9 +566,63 @@ const InspectorView: React.FC = () => {
                 )}
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center h-32 text-slate-400">
-                <UserPlus size={40} className="mb-2" />
-                <p>Sin conductor asociado</p>
+              <div className="flex flex-col items-center justify-center h-24 text-slate-400">
+                <UserPlus size={32} className="mb-2" />
+                <p className="text-sm">Sin conductor asociado</p>
+              </div>
+            )}
+
+            {/* Modal de Conductor (Gestionado por Inspector) */}
+            {showDriverForm && (
+              <div className="absolute inset-0 z-10 bg-white p-6 rounded-xl border-2 border-blue-500 overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                  <h4 className="font-black text-slate-900 uppercase">Registro en Terreno</h4>
+                  <button onClick={() => setShowDriverForm(false)} className="text-slate-400 hover:text-red-500">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <form onSubmit={handleDriverAssignment} className="space-y-4">
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">RUT Conductor</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="12.345.678-9"
+                      className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
+                      value={driverFormData.rut}
+                      onChange={e => setDriverFormData({...driverFormData, rut: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Nombre Completo</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ej: Juan Pérez"
+                      className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
+                      value={driverFormData.nombre}
+                      onChange={e => setDriverFormData({...driverFormData, nombre: e.target.value})}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Vencimiento Licencia (Opcional)</label>
+                    <input
+                      type="date"
+                      className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
+                      value={driverFormData.vencimientoLicencia}
+                      onChange={e => setDriverFormData({...driverFormData, vencimientoLicencia: e.target.value})}
+                    />
+                  </div>
+                  
+                  <button
+                    type="submit"
+                    className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white font-black py-3 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200"
+                  >
+                    <Save size={18} />
+                    GUARDAR Y ASIGNAR
+                  </button>
+                </form>
               </div>
             )}
           </div>
@@ -512,7 +684,7 @@ const InspectorView: React.FC = () => {
                       </div>
                       <div className="field-group relative min-h-[4em]">
                         <p className="text-lg font-black uppercase value-dynamic" style={{ position: 'absolute', top: printSettings.fechaUso.top, left: printSettings.fechaUso.left, fontSize: printSettings.fechaUso.fontSize }}>{new Date(ticket.fechaUso).toLocaleDateString()}</p>
-                        <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize }}>{ticket.variacion}</p>
+                        <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize }}>{formatRouteDisplay(foundVehiculo, ticket.variacion)}</p>
                       </div>
                       <div className="field-group col-span-1 relative min-h-[4em]">
                         <p className="text-sm font-bold value-dynamic" style={{ position: 'absolute', top: printSettings.conductor.top, left: printSettings.conductor.left, fontSize: printSettings.conductor.fontSize }}>{ticket.nombreConductor}</p>
@@ -530,6 +702,81 @@ const InspectorView: React.FC = () => {
       ) : searchTerm && (
         <div className="bg-amber-50 p-8 rounded-xl text-center border border-amber-200 animate-pulse">
           <p className="text-amber-800 font-medium">No se encontró ningún vehículo con el número "{searchTerm}"</p>
+        </div>
+      )}
+
+      {/* Modal de confirmación de VENTA */}
+      {ventaConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print">
+          <div className="w-full max-w-sm overflow-hidden bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="p-6 text-center">
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-blue-100 rounded-full">
+                <Ticket className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-gray-900 tracking-tight">CONFIRMAR VENTA</h3>
+              <p className="text-gray-600 text-sm">
+                Está a punto de emitir <span className="font-bold text-gray-900">{selectedDates.length} tarjeta(s)</span> para el vehículo <span className="font-bold text-gray-900">#{foundVehiculo?.id}</span>.
+              </p>
+              <div className="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+                <p className="text-[10px] font-black text-slate-400 uppercase mb-1 text-left">Días seleccionados</p>
+                <div className="flex flex-wrap gap-1">
+                  {selectedDates.map(d => (
+                    <span key={d} className="bg-white px-2 py-0.5 rounded border text-[10px] font-bold text-slate-700">
+                      {new Date(d + 'T12:00:00').toLocaleDateString('es-CL', { day: '2-digit', month: '2-digit' })}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <div className="flex p-4 gap-3 bg-gray-50 border-t">
+              <button
+                onClick={() => setVentaConfirm(false)}
+                className="flex-1 px-4 py-3 font-bold text-gray-500 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors uppercase text-xs"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmVenta}
+                className="flex-1 px-4 py-3 font-bold text-white bg-blue-600 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-colors uppercase text-xs"
+              >
+                Emitir Tarjetas
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de confirmación de REIMPRESIÓN */}
+      {reissueConfirm.show && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print">
+          <div className="w-full max-w-sm overflow-hidden bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+            <div className="p-6 text-center">
+              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-4 bg-amber-100 rounded-full">
+                <Printer className="w-8 h-8 text-amber-600" />
+              </div>
+              <h3 className="mb-2 text-xl font-bold text-gray-900 tracking-tight">¿REIMPRIMIR TARJETA?</h3>
+              <p className="text-gray-600 text-sm">
+                El día <span className="font-bold text-gray-900">{new Date(reissueConfirm.date + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}</span> ya tiene una tarjeta emitida.
+              </p>
+              <p className="mt-3 text-xs text-amber-600 bg-amber-50 p-2 rounded-lg border border-amber-100 italic">
+                La tarjeta original se mantendrá, pero se generará un duplicado para impresión.
+              </p>
+            </div>
+            <div className="flex p-4 gap-3 bg-gray-50 border-t">
+              <button
+                onClick={() => setReissueConfirm({show: false, date: ''})}
+                className="flex-1 px-4 py-3 font-bold text-gray-500 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors uppercase text-xs"
+              >
+                Cancelar
+              </button>
+              <button
+                onClick={confirmReissue}
+                className="flex-1 px-4 py-3 font-bold text-white bg-amber-600 rounded-xl hover:bg-amber-700 shadow-lg shadow-amber-200 transition-colors uppercase text-xs"
+              >
+                Confirmar
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

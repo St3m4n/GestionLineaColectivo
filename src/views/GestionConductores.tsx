@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useStore } from '../contexts/StateContext';
 import { 
-    Plus, UserPlus, Trash2, Edit3, Eye, X, FileText, 
-    ShieldAlert, ShieldCheck, History, Save, Calendar
+    UserPlus, Trash2, Edit3, Eye, X, FileText, 
+    ShieldAlert, ShieldCheck, History, Save, Calendar, LayoutGrid, List,
+    Search, ArrowUpDown
 } from 'lucide-react';
-import type { Conductor, Vehiculo } from '../types';
+import type { Conductor } from '../types';
 
 const MOTIVOS_BLOQUEO = [
     'Suspensión Administrativa',
@@ -18,14 +19,18 @@ const MOTIVOS_BLOQUEO = [
 const GestionConductores: React.FC = () => {
     const { 
         conductores, addConductor, removeConductor, updateConductor, 
-        vehiculos, multas 
+        vehiculos, multas, auditoriaAsignaciones 
     } = useStore();
     
     const [selectedConductor, setSelectedConductor] = useState<Conductor | null>(null);
     const [isEditing, setIsEditing] = useState(false);
     const [showAddForm, setShowAddForm] = useState(false);
     const [profileTab, setProfileTab] = useState<'resumen' | 'historial' | 'multas' | 'edicion'>('resumen');
+    const [activeTab, setActiveTab] = useState<'todos' | 'activos' | 'disponibles' | 'pendientes'>('todos');
+    const [viewMode, setViewMode] = useState<'cards' | 'list'>('list');
     const [motivoBloqueo, setMotivoBloqueo] = useState(MOTIVOS_BLOQUEO[0]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [sortBy, setSortBy] = useState<'nombre' | 'rut' | 'vehiculoId'>('nombre');
 
     // Form states
     const [formData, setFormData] = useState({
@@ -34,6 +39,33 @@ const GestionConductores: React.FC = () => {
         vencimientoLicencia: '',
         vehiculoId: '' as string | number,
     });
+
+    const filteredConductores = conductores
+        .filter(c => {
+            const matchesTab = 
+                activeTab === 'todos' ||
+                (activeTab === 'activos' && !!c.vehiculoId && !c.agregadoPorInspector) ||
+                (activeTab === 'disponibles' && !c.vehiculoId && !c.agregadoPorInspector) ||
+                (activeTab === 'pendientes' && !!c.agregadoPorInspector);
+            
+            const searchLower = searchTerm.toLowerCase();
+            const matchesSearch = 
+                c.nombre.toLowerCase().includes(searchLower) ||
+                c.rut.toLowerCase().includes(searchLower) ||
+                (c.vehiculoId?.toString().includes(searchLower));
+
+            return matchesTab && matchesSearch;
+        })
+        .sort((a, b) => {
+            if (sortBy === 'nombre') return a.nombre.localeCompare(b.nombre);
+            if (sortBy === 'rut') return a.rut.localeCompare(b.rut);
+            if (sortBy === 'vehiculoId') {
+                const valA = a.vehiculoId || 9999;
+                const valB = b.vehiculoId || 9999;
+                return valA - valB;
+            }
+            return 0;
+        });
 
     const handleSave = (e: React.FormEvent) => {
         e.preventDefault();
@@ -45,13 +77,15 @@ const GestionConductores: React.FC = () => {
                 nombre: formData.nombre,
                 vencimientoLicencia: formData.vencimientoLicencia,
                 vehiculoId: vId,
-            });
-            // Update local selected state to reflect changes in UI instantly
+                agregadoPorInspector: false // Al ser editado por Admin, deja de ser pendiente
+            }, 'administrador');
+            // Update local selected state
             setSelectedConductor(prev => prev ? { 
                 ...prev, 
                 nombre: formData.nombre, 
                 vencimientoLicencia: formData.vencimientoLicencia, 
-                vehiculoId: vId 
+                vehiculoId: vId,
+                agregadoPorInspector: false
             } : null);
             setIsEditing(false);
             setProfileTab('resumen');
@@ -62,7 +96,7 @@ const GestionConductores: React.FC = () => {
                 vencimientoLicencia: formData.vencimientoLicencia,
                 vehiculoId: vId,
                 bloqueado: false
-            });
+            }, 'administrador');
             setShowAddForm(false);
         }
     };
@@ -81,60 +115,202 @@ const GestionConductores: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <header className="flex justify-between items-center">
+            <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
                     <h2 className="text-3xl font-bold text-slate-800">Padrón de Conductores</h2>
                     <p className="text-slate-500">Administración de chóferes y sus habilitaciones.</p>
                 </div>
-                <button 
-                    onClick={() => {
-                        setShowAddForm(true);
-                        setIsEditing(false);
-                        setFormData({ rut: '', nombre: '', vencimientoLicencia: '', vehiculoId: '' });
-                    }}
-                    className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-bold"
-                >
-                    <UserPlus size={20} />
-                    Inscribir Conductor
-                </button>
+                <div className="flex w-full md:w-auto gap-3">
+                    <div className="relative flex-1 md:w-64">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                        <input 
+                            type="text" 
+                            placeholder="Buscar por nombre, rut o cupo..." 
+                            className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-sm shadow-sm"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                    <button 
+                        onClick={() => {
+                            setShowAddForm(true);
+                            setIsEditing(false);
+                            setFormData({ rut: '', nombre: '', vencimientoLicencia: '', vehiculoId: '' });
+                        }}
+                        className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-xl hover:bg-blue-700 transition font-bold shadow-lg shadow-blue-100 shrink-0"
+                    >
+                        <UserPlus size={20} />
+                        <span className="hidden sm:inline">Nuevo Conductor</span>
+                    </button>
+                </div>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {conductores.map(c => (
-                    <div 
-                        key={c.rut} 
-                        onClick={() => {
-                            setSelectedConductor(c);
-                            setIsEditing(true); // <--- Crucial fix: indicate we are in edit mode
-                            setProfileTab('resumen');
-                            setFormData({
-                                rut: c.rut,
-                                nombre: c.nombre,
-                                vencimientoLicencia: c.vencimientoLicencia,
-                                vehiculoId: c.vehiculoId || '',
-                            });
-                        }}
-                        className={`p-4 rounded-xl border-2 transition cursor-pointer group hover:border-blue-500 ${selectedConductor?.rut === c.rut ? 'border-blue-600 bg-blue-50' : 'bg-white border-slate-100 hover:shadow-md'}`}
-                    >
-                        <div className="flex justify-between items-start mb-2">
-                             <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${c.bloqueado ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
-                                {c.nombre.charAt(0)}
-                             </div>
-                            {c.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
-                        </div>
-                        <p className="font-bold text-slate-700 truncate">{c.nombre}</p>
-                        <p className="text-xs text-slate-400 font-mono italic">{c.rut}</p>
-                        <div className="mt-3 flex justify-between items-center">
-                             {c.vehiculoId ? (
-                                <span className="text-[10px] font-black uppercase py-0.5 px-2 bg-slate-800 text-white rounded">CUPO #{c.vehiculoId}</span>
-                             ) : (
-                                <span className="text-[10px] font-bold uppercase py-0.5 px-2 bg-slate-100 text-slate-400 rounded">Sin Cupo</span>
-                             )}
-                             {new Date(c.vencimientoLicencia) < new Date() && <span className="text-[10px] font-black text-red-600 underline">LICENCIA VENCIDA</span>}
-                        </div>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-white p-2 rounded-xl border border-slate-200 shadow-sm">
+                <div className="flex gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+                    {[
+                        { id: 'todos', label: 'Todos' },
+                        { id: 'activos', label: 'Activos' },
+                        { id: 'disponibles', label: 'Disponibles' },
+                        { id: 'pendientes', label: 'Pendientes' }
+                    ].map(tab => (
+                        <button 
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id as any)}
+                            className={`px-6 py-2 font-black text-xs uppercase tracking-tighter transition-all border-b-4 shrink-0 ${activeTab === tab.id ? 'border-blue-600 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-400 hover:text-slate-600'}`}
+                        >
+                            {tab.label}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="flex items-center gap-4 w-full md:w-auto justify-between">
+                    <div className="flex items-center gap-2">
+                        <ArrowUpDown size={14} className="text-slate-400" />
+                        <select 
+                            value={sortBy}
+                            onChange={(e) => setSortBy(e.target.value as any)}
+                            className="bg-transparent text-xs font-bold text-slate-500 outline-none cursor-pointer hover:text-blue-600 transition"
+                        >
+                            <option value="nombre">Ordenar por Nombre</option>
+                            <option value="rut">Ordenar por RUT</option>
+                            <option value="vehiculoId">Ordenar por Cupo</option>
+                        </select>
                     </div>
-                ))}
+
+                    <div className="flex bg-slate-100 p-1 rounded-lg">
+                        <button 
+                            onClick={() => setViewMode('cards')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'cards' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            <LayoutGrid size={18} />
+                        </button>
+                        <button 
+                            onClick={() => setViewMode('list')}
+                            className={`p-1.5 rounded-md transition-all ${viewMode === 'list' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-400 hover:text-slate-600'}`}
+                        >
+                            <List size={18} />
+                        </button>
+                    </div>
+                </div>
             </div>
+
+            {viewMode === 'cards' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {filteredConductores.map(c => (
+                        <div 
+                            key={c.rut} 
+                            onClick={() => {
+                                setSelectedConductor(c);
+                                setIsEditing(true); // <--- Crucial fix: indicate we are in edit mode
+                                setProfileTab('resumen');
+                                setFormData({
+                                    rut: c.rut,
+                                    nombre: c.nombre,
+                                    vencimientoLicencia: c.vencimientoLicencia,
+                                    vehiculoId: c.vehiculoId || '',
+                                });
+                            }}
+                            className={`p-4 rounded-xl border-2 transition cursor-pointer group hover:border-blue-500 ${selectedConductor?.rut === c.rut ? 'border-blue-600 bg-blue-50' : 'bg-white border-slate-100 hover:shadow-md'} relative`}
+                        >
+                            {c.agregadoPorInspector && (
+                                <div className="absolute top-0 right-10 bg-orange-100 text-orange-600 text-[8px] font-black px-2 py-0.5 rounded-b-md uppercase">
+                                    Vía Inspector
+                                </div>
+                            )}
+                            <div className="flex justify-between items-start mb-2">
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${c.bloqueado ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                                    {c.nombre.charAt(0)}
+                                </div>
+                                {c.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
+                            </div>
+                            <p className="font-bold text-slate-700 truncate">{c.nombre}</p>
+                            <p className="text-xs text-slate-400 font-mono italic">{c.rut}</p>
+                            <div className="mt-3 flex justify-between items-center">
+                                {c.vehiculoId ? (
+                                    <span className="text-[10px] font-black uppercase py-0.5 px-2 bg-slate-800 text-white rounded">CUPO #{c.vehiculoId}</span>
+                                ) : (
+                                    <span className="text-[10px] font-bold uppercase py-0.5 px-2 bg-slate-100 text-slate-400 rounded">Sin Cupo</span>
+                                )}
+                                {new Date(c.vencimientoLicencia) < new Date() && <span className="text-[10px] font-black text-red-600 underline">LICENCIA VENCIDA</span>}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr className="bg-slate-50 border-b border-slate-200">
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Conductor</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">RUT</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Cupo Asignado</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Estado</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase">Licencia</th>
+                                <th className="px-6 py-4 text-[10px] font-black text-slate-400 uppercase text-right">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {filteredConductores.map(c => (
+                                <tr 
+                                    key={c.rut}
+                                    onClick={() => {
+                                        setSelectedConductor(c);
+                                        setIsEditing(true);
+                                        setProfileTab('resumen');
+                                        setFormData({
+                                            rut: c.rut,
+                                            nombre: c.nombre,
+                                            vencimientoLicencia: c.vencimientoLicencia,
+                                            vehiculoId: c.vehiculoId || '',
+                                        });
+                                    }}
+                                    className="hover:bg-slate-50 transition cursor-pointer border-b border-slate-100 last:border-0"
+                                >
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-3">
+                                            <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs ${c.bloqueado ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
+                                                {c.nombre.charAt(0)}
+                                            </div>
+                                            <span className="font-bold text-slate-700">{c.nombre}</span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 font-mono text-xs text-slate-500">{c.rut}</td>
+                                    <td className="px-6 py-4">
+                                        {c.vehiculoId ? (
+                                            <span className="text-[10px] font-black uppercase py-1 px-3 bg-slate-800 text-white rounded-full">Cupo #{c.vehiculoId}</span>
+                                        ) : (
+                                            <span className="text-[10px] font-bold uppercase py-1 px-3 bg-slate-100 text-slate-400 rounded-full">Disponible</span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {c.bloqueado ? (
+                                            <span className="flex items-center gap-1 text-red-600 text-[10px] font-black uppercase">
+                                                <ShieldAlert size={12} /> Bloqueado
+                                            </span>
+                                        ) : (
+                                            <span className="flex items-center gap-1 text-green-600 text-[10px] font-black uppercase">
+                                                <ShieldCheck size={12} /> Habilitado
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 text-xs font-medium">
+                                        {new Date(c.vencimientoLicencia) < new Date() ? (
+                                            <span className="text-red-600 font-black underline">VENCIDA</span>
+                                        ) : (
+                                            <span className="text-slate-500">{c.vencimientoLicencia}</span>
+                                        )}
+                                    </td>
+                                    <td className="px-6 py-4 text-right">
+                                        <button className="text-slate-400 hover:text-blue-600 transition p-1">
+                                            <Eye size={18} />
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             {/* MODAL PERFIL CONDUCTOR */}
             {selectedConductor && (
@@ -233,6 +409,44 @@ const GestionConductores: React.FC = () => {
                                             </div>
                                         </div>
                                     )}
+                                </div>
+                            )}
+
+                            {profileTab === 'historial' && (
+                                <div className="space-y-4 animate-in fade-in slide-in-from-right-4">
+                                    <h4 className="font-black text-slate-900 uppercase text-sm border-b pb-2">Auditoría de Asignaciones</h4>
+                                    <div className="space-y-3">
+                                        {auditoriaAsignaciones
+                                            .filter(a => a.conductorRut === selectedConductor.rut)
+                                            .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime())
+                                            .map(log => (
+                                                <div key={log.id} className="p-4 border rounded-xl bg-slate-50 flex justify-between items-center">
+                                                    <div>
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded text-white uppercase ${log.tipo === 'nuevo' ? 'bg-green-600' : 'bg-blue-600'}`}>
+                                                                {log.tipo}
+                                                            </span>
+                                                            <span className={`text-[9px] font-black px-2 py-0.5 rounded uppercase ${log.realizadoPor === 'inspector' ? 'bg-orange-100 text-orange-700' : 'bg-slate-200 text-slate-700'}`}>
+                                                                Por: {log.realizadoPor}
+                                                            </span>
+                                                        </div>
+                                                        <p className="text-sm font-bold text-slate-700">
+                                                            Asignado al Vehículo <span className="text-blue-600">#{log.vehiculoId}</span>
+                                                        </p>
+                                                        <p className="text-[10px] text-slate-500">
+                                                            {new Date(log.fecha).toLocaleString()}
+                                                        </p>
+                                                    </div>
+                                                    <History size={20} className="text-slate-300" />
+                                                </div>
+                                            ))}
+                                        
+                                        {auditoriaAsignaciones.filter(a => a.conductorRut === selectedConductor.rut).length === 0 && (
+                                            <div className="text-center py-10 text-slate-400 italic text-sm">
+                                                No hay registros de cambios recientes para este conductor.
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             )}
 

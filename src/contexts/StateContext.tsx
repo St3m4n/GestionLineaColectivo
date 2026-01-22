@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import type { 
   Vehiculo, Conductor, TarjetaRuta, Multa, VariacionRuta,
-  AuditoriaDesbloqueo, PrintSettings 
+  AuditoriaDesbloqueo, PrintSettings, AuditoriaAsignacion 
 } from '../types';
 
 interface StateContextType {
@@ -10,11 +10,12 @@ interface StateContextType {
   tarjetas: TarjetaRuta[];
   multas: Multa[];
   auditoriaDesbloqueos: AuditoriaDesbloqueo[];
+  auditoriaAsignaciones: AuditoriaAsignacion[];
   addVehiculo: (v: Vehiculo) => void;
   updateVehiculo: (v: Vehiculo) => void;
   removeVehiculo: (id: number) => void;
-  addConductor: (c: Conductor) => void;
-  updateConductor: (c: Conductor) => void;
+  addConductor: (c: Conductor, realizadoPor?: 'administrador' | 'inspector') => void;
+  updateConductor: (c: Conductor, realizadoPor?: 'administrador' | 'inspector') => void;
   removeConductor: (rut: string) => void;
   venderTarjeta: (vehiculoId: number, fechasUso?: string[]) => { success: boolean; message: string; cards?: TarjetaRuta[] };
   getMonthlyBalance: (vehiculoId: number) => number;
@@ -29,6 +30,9 @@ interface StateContextType {
   updatePrintSettings: (field: keyof PrintSettings, values: Partial<{ top: number, left: number, fontSize: number }>) => void;
   diasNoHabiles: string[];
   toggleDiaNoHabil: (fecha: string) => void;
+  asignacionesR: Record<string, number[]>;
+  updateAsignacionesR: (fecha: string, vehiculosIds: number[]) => void;
+  batchUpdateAsignacionesR: (data: Record<string, number[]>) => void;
 }
 
 const DEFAULT_PRINT_SETTINGS: PrintSettings = {
@@ -44,71 +48,50 @@ const DEFAULT_PRINT_SETTINGS: PrintSettings = {
 
 const StateContext = createContext<StateContextType | undefined>(undefined);
 
-const INITIAL_VEHICULOS: Vehiculo[] = [
-  { 
-    id: 101, 
-    propietario: 'Don Pedro',
-    patente: 'AA-BB-11', 
-    modelo: 'Toyota Yaris', 
-    anio: 2022, 
-    vencimientoRevisionTecnica: '2026-05-20', 
-    vencimientoSeguro: '2026-03-15', 
+const INITIAL_VEHICULOS: Vehiculo[] = Array.from({ length: 150 }, (_, i) => {
+  const id = i + 1;
+  return {
+    id,
+    propietario: `Dueño Cupo #${id}`,
+    patente: `ZZ-XX-${String(id).padStart(2, '0')}`,
+    modelo: id % 2 === 0 ? 'Toyota Yaris' : 'Hyundai Accent',
+    anio: 2022,
+    vencimientoRevisionTecnica: '2026-05-20',
+    vencimientoSeguro: '2026-03-15',
     bloqueado: false,
-    rutaPrincipal: 'Troncal',
-    variacionRuta: 'Normal',
-    estadoCuenta: { deudas: 0, multas: 0 }
-  },
-  { 
-    id: 102, 
-    propietario: 'Doña María',
-    patente: 'CC-DD-22', 
-    modelo: 'Hyundai Accent', 
-    anio: 2021, 
-    vencimientoRevisionTecnica: '2026-06-15', 
-    vencimientoSeguro: '2026-04-10', 
-    bloqueado: true, 
-    motivoBloqueo: 'Multas pendientes',
-    rutaPrincipal: 'Variante',
+    rutaPrincipal: id <= 75 ? 'Troncal' : 'Variante 2',
     variacionRuta: 'L',
-    estadoCuenta: { deudas: 25000, multas: 15000 }
-  },
-];
+    estadoCuenta: { deudas: 0, multas: 0 }
+  };
+});
 
-const INITIAL_CONDUCTORES: Conductor[] = [
-  { 
-    rut: '12.345.678-9', 
-    nombre: 'Juan Pérez', 
-    vencimientoLicencia: '2027-10-12', 
-    vehiculoId: 101, 
+const INITIAL_CONDUCTORES: Conductor[] = Array.from({ length: 150 }, (_, i) => {
+  const id = i + 1;
+  const rut = `${10 + Math.floor(id/10)}.${String(id%10).repeat(3)}.${String(id%10).repeat(3)}-${id%10}`;
+  return {
+    rut,
+    nombre: `Chofer Ejemplo ${id}`,
+    vencimientoLicencia: '2028-10-12',
+    vehiculoId: id,
     bloqueado: false,
     historialVehiculos: [
-      { id: 'h1', vehiculoId: 101, conductorRut: '12.345.678-9', fechaInicio: '2023-01-01' }
+      { id: `h${id}`, vehiculoId: id, conductorRut: rut, fechaInicio: '2024-01-01' }
     ]
-  },
-  { 
-    rut: '98.765.432-1', 
-    nombre: 'Diego Soto', 
-    vencimientoLicencia: '2025-01-10', 
-    vehiculoId: 102, 
-    bloqueado: true, 
-    motivoBloqueo: 'Licencia vencida',
-    historialVehiculos: [
-      { id: 'h2', vehiculoId: 102, conductorRut: '98.765.432-1', fechaInicio: '2023-05-15' }
-    ]
-  },
-];
+  };
+});
 
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehiculos, setVehiculos] = useState<Vehiculo[]>(() => {
     try {
       const saved = localStorage.getItem('vehiculos');
-      if (saved && saved !== 'undefined') {
+      if (saved && saved !== 'undefined' && saved !== 'null') {
         const parsed = JSON.parse(saved);
+        if (!Array.isArray(parsed)) return INITIAL_VEHICULOS;
         return parsed.map((v: any) => ({
           ...v,
           propietario: v.propietario || 'Propietario no registrado',
-          rutaPrincipal: v.rutaPrincipal || 'Troncal',
-          variacionRuta: v.variacionRuta || 'Normal',
+          rutaPrincipal: v.rutaPrincipal === 'Variante' ? 'Variante 2' : (v.rutaPrincipal || 'Troncal'),
+          variacionRuta: v.variacionRuta || 'L',
           estadoCuenta: v.estadoCuenta || { deudas: 0, multas: 0 }
         }));
       }
@@ -119,8 +102,9 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [conductores, setConductores] = useState<Conductor[]>(() => {
     try {
       const saved = localStorage.getItem('conductores');
-      if (saved && saved !== 'undefined') {
+      if (saved && saved !== 'undefined' && saved !== 'null') {
         const parsed = JSON.parse(saved);
+        if (!Array.isArray(parsed)) return INITIAL_CONDUCTORES;
         // DEDUPLICACIÓN DE EMERGENCIA: Limpia duplicados accidentales por RUT
         const uniqueMap = new Map();
         parsed.forEach((c: any) => {
@@ -140,28 +124,39 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [tarjetas, setTarjetas] = useState<TarjetaRuta[]>(() => {
     try {
       const saved = localStorage.getItem('tarjetas');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   });
 
   const [multas, setMultas] = useState<Multa[]>(() => {
     try {
       const saved = localStorage.getItem('multas');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   });
 
   const [auditoriaDesbloqueos, setAuditoriaDesbloqueos] = useState<AuditoriaDesbloqueo[]>(() => {
     try {
       const saved = localStorage.getItem('auditoria_desbloqueos');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch { return []; }
+  });
+
+  const [auditoriaAsignaciones, setAuditoriaAsignaciones] = useState<AuditoriaAsignacion[]>(() => {
+    try {
+      const saved = localStorage.getItem('auditoria_asignaciones');
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
   });
 
   const [printSettings, setPrintSettings] = useState<PrintSettings>(() => {
     try {
       const saved = localStorage.getItem('print_settings');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : DEFAULT_PRINT_SETTINGS;
+      return (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : DEFAULT_PRINT_SETTINGS;
     } catch { return DEFAULT_PRINT_SETTINGS; }
   });
 
@@ -175,14 +170,43 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [diasNoHabiles, setDiasNoHabiles] = useState<string[]>(() => {
     try {
       const saved = localStorage.getItem('dias_no_habiles');
-      return saved && saved !== 'undefined' ? JSON.parse(saved) : [];
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : [];
+      return Array.isArray(parsed) ? parsed : [];
     } catch { return []; }
+  });
+
+  const [asignacionesR, setAsignacionesR] = useState<Record<string, number[]>>(() => {
+    try {
+      const saved = localStorage.getItem('asignaciones_r');
+      const parsed = (saved && saved !== 'undefined' && saved !== 'null') ? JSON.parse(saved) : {};
+      return (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
+    } catch { return {}; }
   });
 
   const toggleDiaNoHabil = (fecha: string) => {
     setDiasNoHabiles(prev => 
       prev.includes(fecha) ? prev.filter(d => d !== fecha) : [...prev, fecha]
     );
+  };
+
+  const updateAsignacionesR = (fecha: string, vehiculosIds: number[] | null) => {
+    setAsignacionesR(prev => {
+      if (vehiculosIds === null) {
+        const { [fecha]: _, ...rest } = prev;
+        return rest;
+      }
+      return {
+        ...prev,
+        [fecha]: vehiculosIds
+      };
+    });
+  };
+
+  const batchUpdateAsignacionesR = (data: Record<string, number[]>) => {
+    setAsignacionesR(prev => ({
+      ...prev,
+      ...data
+    }));
   };
 
   useEffect(() => {
@@ -206,6 +230,10 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }, [auditoriaDesbloqueos]);
 
   useEffect(() => {
+    localStorage.setItem('auditoria_asignaciones', JSON.stringify(auditoriaAsignaciones));
+  }, [auditoriaAsignaciones]);
+
+  useEffect(() => {
     localStorage.setItem('print_settings', JSON.stringify(printSettings));
   }, [printSettings]);
 
@@ -213,11 +241,15 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('dias_no_habiles', JSON.stringify(diasNoHabiles));
   }, [diasNoHabiles]);
 
+  useEffect(() => {
+    localStorage.setItem('asignaciones_r', JSON.stringify(asignacionesR));
+  }, [asignacionesR]);
+
   const addVehiculo = (v: Vehiculo) => setVehiculos([...vehiculos, v]);
   const updateVehiculo = (v: Vehiculo) => setVehiculos(vehiculos.map(it => it.id === v.id ? v : it));
   const removeVehiculo = (id: number) => setVehiculos(vehiculos.filter(v => v.id !== id));
 
-  const addConductor = (c: Conductor) => {
+  const addConductor = (c: Conductor, realizadoPor: 'administrador' | 'inspector' = 'administrador') => {
     setConductores(prev => {
       // PREVENCIÓN DE DUPLICADOS: Si el RUT ya existe, no agregamos uno nuevo
       if (prev.some(old => old.rut === c.rut)) {
@@ -244,6 +276,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       const freshConductor = {
         ...c,
+        agregadoPorInspector: realizadoPor === 'inspector',
         historialVehiculos: c.vehiculoId ? [{
           id: crypto.randomUUID(),
           vehiculoId: c.vehiculoId,
@@ -254,10 +287,25 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
       return [...nextBase, freshConductor];
     });
+
+    if (c.vehiculoId) {
+      setAuditoriaAsignaciones(prev => [{
+        id: crypto.randomUUID(),
+        vehiculoId: c.vehiculoId!,
+        conductorRut: c.rut,
+        conductorNombre: c.nombre,
+        fecha: new Date().toISOString(),
+        tipo: 'nuevo',
+        realizadoPor
+      }, ...prev]);
+    }
   };
 
-  const updateConductor = (updated: Conductor) => {
+  const updateConductor = (updated: Conductor, realizadoPor: 'administrador' | 'inspector' = 'administrador') => {
+    let oldConductor: Conductor | undefined;
+    
     setConductores(prev => {
+      oldConductor = prev.find(it => it.rut === updated.rut);
       // 1. If assigned to a vehicle, unbind others
       let next = prev;
       if (updated.vehiculoId) {
@@ -309,7 +357,21 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return updated;
       });
     });
+
+    // Check if vehicle assignment changed to record audit
+    if (updated.vehiculoId && (!oldConductor || oldConductor.vehiculoId !== updated.vehiculoId)) {
+        setAuditoriaAsignaciones(prev => [{
+          id: crypto.randomUUID(),
+          vehiculoId: updated.vehiculoId!,
+          conductorRut: updated.rut,
+          conductorNombre: updated.nombre,
+          fecha: new Date().toISOString(),
+          tipo: oldConductor?.vehiculoId ? 'cambio' : 'nuevo',
+          realizadoPor
+        }, ...prev]);
+    }
   };
+
   const removeConductor = (rut: string) => {
     // Optionally we could keep them in a "soft delete" or just remove them.
     // But since history is tied to the conductor object, removing them loses their history.
@@ -346,7 +408,8 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     // Si no se pasan fechas, se asume el día de hoy (comportamiento anterior si no se actualiza el componente)
-    const targetDates = fechasUso || [new Date().toISOString().split('T')[0]];
+    const todayStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
+    const targetDates = fechasUso || [todayStr];
     
     // Evitar duplicados para seguridad aunque el front lo prevenga
     const alreadySold = targetDates.some(d => 
@@ -411,28 +474,43 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const getDynamicVariacion = (vehiculoId: number, baseDate?: Date): VariacionRuta => {
     const today = baseDate || new Date();
-    
-    // 1. Lógica para variación "R" (Rotativa por sorteo/día)
-    const epoch = new Date(2024, 0, 1);
-    const diffTime = Math.abs(today.getTime() - epoch.getTime());
-    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-    
-    const totalGroups = 28; 
-    const groupToday = diffDays % totalGroups;
+    // Usar formato local YYYY-MM-DD para evitar desfases de toISOString()
+    const dateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
-    let isRDay = false;
-    if (groupToday === 0) {
-      isRDay = vehiculoId >= 1 && vehiculoId <= 6;
+    // 0. Si existe un registro (aunque sea []) para este día, se respeta la decisión del administrador
+    if (asignacionesR && Object.prototype.hasOwnProperty.call(asignacionesR, dateStr)) {
+      if (asignacionesR[dateStr].includes(vehiculoId)) {
+        return 'R';
+      }
+      // Si el día está registrado pero no incluye al auto, este hará L o T
     } else {
-      const start = 6 + (groupToday - 1) * 9 + 1;
-      const end = (groupToday === totalGroups - 1) ? 250 : 6 + groupToday * 9;
-      isRDay = vehiculoId >= start && vehiculoId <= end;
+      // 1. Si NO hay registro manual, usamos la Lógica Automática (8 de Troncal y 8 de Variante 2 cada día)
+      const epoch = new Date(2024, 0, 1);
+      const diffTime = Math.abs(today.getTime() - epoch.getTime());
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      const troncales = vehiculos.filter(v => v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal).sort((a,b) => a.id - b.id);
+      const variante2s = vehiculos.filter(v => v.rutaPrincipal === 'Variante 2').sort((a,b) => a.id - b.id);
+
+      // Rotación Troncales (8 por día)
+      if (troncales.length > 0) {
+        const startIdx = (diffDays * 8) % troncales.length;
+        for (let i = 0; i < 8; i++) {
+          if (troncales[(startIdx + i) % troncales.length].id === vehiculoId) return 'R';
+        }
+      }
+
+      // Rotación Variante 2 (8 por día)
+      if (variante2s.length > 0) {
+        const startIdx = (diffDays * 8) % variante2s.length;
+        for (let i = 0; i < 8; i++) {
+          if (variante2s[(startIdx + i) % variante2s.length].id === vehiculoId) return 'R';
+        }
+      }
     }
 
-    if (isRDay) return 'R';
-
-    // 2. Lógica Mensual (Normal vs L)
-    return (today.getMonth() % 2 === 0) ? 'L' : 'Normal';
+    // 2. Lógica para vehículos que no están en R (rotan mensualmente entre T y L)
+    return (today.getMonth() % 2 === 0) ? 'L' : 'T';
   };
 
   const registrarPago = (vehiculoId: number, monto: number, tipo: 'deuda' | 'multa') => {
@@ -571,7 +649,7 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   return (
     <StateContext.Provider value={{
-      vehiculos, conductores, tarjetas, multas, auditoriaDesbloqueos,
+      vehiculos, conductores, tarjetas, multas, auditoriaDesbloqueos, auditoriaAsignaciones,
       addVehiculo, updateVehiculo, removeVehiculo,
       addConductor, updateConductor, removeConductor,
       venderTarjeta, getMonthlyBalance, getDynamicVariacion,
@@ -580,7 +658,10 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       printSettings,
       updatePrintSettings,
       diasNoHabiles,
-      toggleDiaNoHabil
+      toggleDiaNoHabil,
+      asignacionesR,
+      updateAsignacionesR,
+      batchUpdateAsignacionesR
     }}>
       {children}
     </StateContext.Provider>

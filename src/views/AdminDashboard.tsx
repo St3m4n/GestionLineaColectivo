@@ -8,15 +8,9 @@ const AdminDashboard: React.FC = () => {
     const {
         tarjetas, vehiculos, conductores, registrarPago, multas,
         pagarMulta, updateMulta, removeMulta, auditoriaDesbloqueos,
-        printSettings, updatePrintSettings, diasNoHabiles, toggleDiaNoHabil
+        printSettings, updatePrintSettings, diasNoHabiles, toggleDiaNoHabil,
+        asignacionesR, updateAsignacionesR, batchUpdateAsignacionesR, getDynamicVariacion
     } = useStore();
-    const [activeAdminTab, setActiveAdminTab] = React.useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario'>('resumen');
-
-    // Estado para edición de multas
-    const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
-    const [editFineFormData, setEditFineFormData] = React.useState<Partial<Multa>>({});
-    const [auditFilter, setAuditFilter] = React.useState('');
-    const [calMonth, setCalMonth] = React.useState(new Date());
 
     const getLocalDateStr = (date: Date) => {
         const year = date.getFullYear();
@@ -24,6 +18,68 @@ const AdminDashboard: React.FC = () => {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    const [activeAdminTab, setActiveAdminTab] = React.useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR'>('resumen');
+
+    // Estado para edición de multas
+    const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
+    const [editFineFormData, setEditFineFormData] = React.useState<Partial<Multa>>({});
+    const [auditFilter, setAuditFilter] = React.useState('');
+    const [calMonth, setCalMonth] = React.useState(new Date());
+    const [showTodaySalesModal, setShowTodaySalesModal] = React.useState(false);
+    const [showMonthSalesModal, setShowMonthSalesModal] = React.useState(false);
+    const [selectedDateR, setSelectedDateR] = React.useState<string>(getLocalDateStr(new Date()));
+    const [selectedReportDate, setSelectedReportDate] = React.useState<string>(getLocalDateStr(new Date()));
+    const [editRText, setEditRText] = React.useState('');
+
+    const handleGenerateMonthlyRotation = () => {
+        const confirm = window.confirm(`¿Seguro que deseas generar la planificación de la Variante R para todo el mes de ${calMonth.toLocaleString('es-CL', { month: 'long' })}? Se sobrescribirá cualquier cambio manual previo.`);
+        if (!confirm) return;
+
+        const dCount = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+        const newBatch: Record<string, number[]> = {};
+
+        for (let i = 1; i <= dCount; i++) {
+            const dateObj = new Date(calMonth.getFullYear(), calMonth.getMonth(), i);
+            const dStr = getLocalDateStr(dateObj);
+            
+            // Usamos la lógica de rotación automática para proponer el mes
+            // (Esta es la lógica de 8 de Troncal y 8 de Variante 2 por día)
+            const epoch = new Date(2024, 0, 1);
+            const diffTime = Math.abs(dateObj.getTime() - epoch.getTime());
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            const troncales = vehiculos.filter(v => v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal).sort((a,b) => a.id - b.id);
+            const variante2s = vehiculos.filter(v => v.rutaPrincipal === 'Variante 2').sort((a,b) => a.id - b.id);
+            
+            const selectedIds: number[] = [];
+
+            if (troncales.length > 0) {
+                const startIdx = (diffDays * 8) % troncales.length;
+                for (let j = 0; j < 8; j++) {
+                    selectedIds.push(troncales[(startIdx + j) % troncales.length].id);
+                }
+            }
+
+            if (variante2s.length > 0) {
+                const startIdx = (diffDays * 8) % variante2s.length;
+                for (let j = 0; j < 8; j++) {
+                    selectedIds.push(variante2s[(startIdx + j) % variante2s.length].id);
+                }
+            }
+
+            newBatch[dStr] = selectedIds;
+        }
+
+        batchUpdateAsignacionesR(newBatch);
+        alert('Planificación mensual generada y guardada correctamente.');
+    };
+
+    // Mantener sincronizado el texto de edición de R con la fecha seleccionada
+    React.useEffect(() => {
+        const currentIds = asignacionesR[selectedDateR] || vehiculos.filter(v => getDynamicVariacion(v.id, new Date(selectedDateR + 'T12:00:00')) === 'R').map(v => v.id);
+        setEditRText(currentIds.join(', '));
+    }, [selectedDateR, asignacionesR, vehiculos, getDynamicVariacion]);
 
     const filteredAuditoria = useMemo(() => {
         return auditoriaDesbloqueos.filter(a =>
@@ -33,27 +89,73 @@ const AdminDashboard: React.FC = () => {
     }, [auditoriaDesbloqueos, auditFilter]);
 
     const stats = useMemo(() => {
-        const today = new Date().toISOString().split('T')[0];
-        const salesToday = tarjetas.filter(t => t.fechaEmision.startsWith(today)).length * 2500;
+        const now = new Date();
+        const today = getLocalDateStr(now);
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const salesToday = tarjetas.filter(t => getLocalDateStr(new Date(t.fechaEmision)) === today).length * 2500;
+        const salesMonth = tarjetas.filter(t => {
+            const d = new Date(t.fechaEmision);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        }).length * 2500;
+
         const totalVehicles = vehiculos.length;
         const activeDrivers = conductores.filter(c => !c.bloqueado).length;
-        const totalRevenue = tarjetas.length * 2500;
 
         // Calcular datos del gráfico basados en los últimos 7 días
         const days = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'];
         const chartData = Array.from({ length: 7 }).map((_, i) => {
             const d = new Date();
             d.setDate(d.getDate() - (6 - i));
-            const dateStr = d.toISOString().split('T')[0];
-            const daySales = tarjetas.filter(t => t.fechaEmision.startsWith(dateStr)).length * 2500;
+            const dateStr = getLocalDateStr(d);
+            const daySales = tarjetas.filter(t => getLocalDateStr(new Date(t.fechaEmision)) === dateStr).length * 2500;
             return {
                 name: days[d.getDay()],
                 sales: daySales
             };
         });
 
-        return { salesToday, totalVehicles, activeDrivers, totalRevenue, chartData };
+        return { salesToday, salesMonth, totalVehicles, activeDrivers, chartData };
     }, [tarjetas, vehiculos, conductores]);
+
+    const todaySalesDetails = useMemo(() => {
+        const today = getLocalDateStr(new Date());
+        return tarjetas
+            .filter(t => getLocalDateStr(new Date(t.fechaEmision)) === today)
+            .map(t => ({
+                ...t,
+                patente: vehiculos.find(v => v.id === t.vehiculoId)?.patente || 'N/A'
+            }))
+            .sort((a, b) => a.vehiculoId - b.vehiculoId);
+    }, [tarjetas, vehiculos]);
+
+    const monthSalesDetails = useMemo(() => {
+        const now = new Date();
+        const currentMonth = now.getMonth();
+        const currentYear = now.getFullYear();
+
+        const monthTarjetas = tarjetas.filter(t => {
+            const d = new Date(t.fechaEmision);
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+        });
+
+        const grouped = monthTarjetas.reduce((acc, t) => {
+            const dateKey = getLocalDateStr(new Date(t.fechaEmision));
+            if (!acc[dateKey]) {
+                acc[dateKey] = {
+                    date: dateKey,
+                    count: 0,
+                    total: 0
+                };
+            }
+            acc[dateKey].count += 1;
+            acc[dateKey].total += t.valor;
+            return acc;
+        }, {} as Record<string, { date: string, count: number, total: number }>);
+
+        return Object.values(grouped).sort((a, b) => b.date.localeCompare(a.date));
+    }, [tarjetas]);
 
     // Manejo de pagos en la pestaña de caja
     const [paymentData, setPaymentData] = React.useState({ id: '', monto: '', tipo: 'deuda' as 'deuda' | 'multa' });
@@ -88,19 +190,91 @@ const AdminDashboard: React.FC = () => {
         }).sort((a, b) => new Date(a.vencimientoLicencia).getTime() - new Date(b.vencimientoLicencia).getTime());
     }, [conductores]);
 
-    const downloadReport = () => {
-        const csvContent = "data:text/csv;charset=utf-8,"
-            + "Folio,Vehículo ID,Fecha,Valor\n"
-            + tarjetas.map(t => `${t.folio},${t.vehiculoId},${t.fechaEmision},${t.valor}`).join("\n");
+    const downloadDailyReport = (dateStr: string) => {
+        const dayTickets = tarjetas.filter(t => getLocalDateStr(new Date(t.fechaEmision)) === dateStr);
+        
+        const headers = ["Folio", "Venta", "Cupo", "Patente", "Conductor", "Ruta/Variación", "Fecha Uso"];
+        const rows = dayTickets.map(t => {
+            const v = vehiculos.find(veh => veh.id === t.vehiculoId);
+            const c = conductores.find(cond => cond.vehiculoId === t.vehiculoId);
+            return [
+                t.folio,
+                t.valor,
+                t.vehiculoId,
+                `"${v?.patente || 'N/A'}"`,
+                `"${c?.nombre || 'N/A'}"`,
+                `"${t.variacion}"`,
+                t.fechaUso.split('T')[0]
+            ];
+        });
 
-        const encodedUri = encodeURI(csvContent);
+        const csvString = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
+        const blob = new Blob(["\ufeff" + csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
         const link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "reporte_ventas_mensual.csv");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `Ventas_Diarias_${dateStr}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
     };
+
+    const downloadReport = (targetDate: Date = new Date()) => {
+        const year = targetDate.getFullYear();
+        const month = targetDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+        const headers = ["Cupo", ...Array.from({ length: daysInMonth }, (_, i) => i + 1), "Total"];
+        
+        const monthTickets = tarjetas.filter(t => {
+            const d = new Date(t.fechaUso);
+            return d.getMonth() === month && d.getFullYear() === year;
+        });
+
+        const rows = [...vehiculos].sort((a,b) => a.id - b.id).map(v => {
+            const row = [v.id.toString()];
+            let totalMonthTickets = 0;
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const ticket = monthTickets.find(t => t.vehiculoId === v.id && t.fechaUso.startsWith(dateStr));
+                
+                if (ticket) {
+                    row.push(ticket.folio);
+                    totalMonthTickets++;
+                } else {
+                    row.push("");
+                }
+            }
+            row.push(totalMonthTickets.toString());
+            return row.join(",");
+        });
+
+        const csvString = [headers.join(","), ...rows].join("\n");
+        const blob = new Blob(["\ufeff" + csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        const fileName = `Reporte_Folios_${targetDate.toLocaleString('es-CL', { month: 'long', year: 'numeric' }).replace(' ', '_')}.csv`;
+        link.setAttribute("download", fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
+    // Generar lista de los últimos 12 meses
+    const historicalMonths = useMemo(() => {
+        const months = [];
+        for (let i = 0; i < 12; i++) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            months.push(new Date(d.getFullYear(), d.getMonth(), 1));
+        }
+        return months;
+    }, []);
 
     return (
         <div className="space-y-8">
@@ -111,7 +285,7 @@ const AdminDashboard: React.FC = () => {
                 </div>
                 <div className="flex gap-2 w-full md:w-auto">
                     <button
-                        onClick={downloadReport}
+                        onClick={() => downloadReport()}
                         className="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200 transition flex-1 justify-center"
                     >
                         <Download size={18} />
@@ -129,9 +303,11 @@ const AdminDashboard: React.FC = () => {
                 <button onClick={() => setActiveAdminTab('auditoria')} className={`pb-2 font-bold transition ${activeAdminTab === 'auditoria' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
                     Auditoría {auditoriaDesbloqueos.length > 0 && <span className="ml-1 bg-orange-100 text-orange-600 px-1.5 py-0.5 rounded-full text-[10px]">{auditoriaDesbloqueos.length}</span>}
                 </button>
+                <button onClick={() => setActiveAdminTab('reportes')} className={`pb-2 font-bold transition ${activeAdminTab === 'reportes' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>Reportes</button>
                 <button onClick={() => setActiveAdminTab('impresion')} className={`pb-2 font-bold transition ${activeAdminTab === 'impresion' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
                     Config. Impresión
                 </button>
+                <button onClick={() => setActiveAdminTab('rotacionR')} className={`pb-2 font-bold transition ${activeAdminTab === 'rotacionR' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>Rotación R</button>
                 <button onClick={() => setActiveAdminTab('calendario')} className={`pb-2 font-bold transition ${activeAdminTab === 'calendario' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
                     Días Feriados
                 </button>
@@ -141,8 +317,20 @@ const AdminDashboard: React.FC = () => {
                 <>
                     {/* Stats Grid */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <StatCard title="Ventas Hoy" value={`$${stats.salesToday.toLocaleString()}`} icon={TrendingUp} color="blue" />
-                        <StatCard title="Recaudación Total" value={`$${stats.totalRevenue.toLocaleString()}`} icon={CreditCard} color="green" />
+                        <StatCard 
+                            title="Ventas Hoy" 
+                            value={`$${stats.salesToday.toLocaleString()}`} 
+                            icon={TrendingUp} 
+                            color="blue" 
+                            onClick={() => setShowTodaySalesModal(true)}
+                        />
+                        <StatCard 
+                            title="Recaudación Mensual" 
+                            value={`$${stats.salesMonth.toLocaleString()}`} 
+                            icon={CreditCard} 
+                            color="green" 
+                            onClick={() => setShowMonthSalesModal(true)}
+                        />
                         <StatCard title="Vehículos" value={stats.totalVehicles.toString()} icon={Car} color="orange" />
                         <StatCard title="Conductores Habilitados" value={stats.activeDrivers.toString()} icon={Users} color="purple" />
                     </div>
@@ -235,6 +423,144 @@ const AdminDashboard: React.FC = () => {
                             </div>
                         </div>
                     </div>
+
+                    {/* Modal Detalle de Ventas Hoy */}
+                    {showTodaySalesModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                            <div className="w-full max-w-2xl overflow-hidden bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+                                <div className="p-6 border-b flex justify-between items-center bg-slate-50">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                                            <TrendingUp size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-800">Ventas Registradas Hoy</h3>
+                                            <p className="text-xs text-slate-500 font-medium">{new Date().toLocaleDateString('es-CL', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => setShowTodaySalesModal(false)}
+                                        className="p-2 hover:bg-slate-200 rounded-full transition text-slate-400 hover:text-slate-600"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
+                                <div className="max-h-[60vh] overflow-y-auto p-0">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead className="sticky top-0 bg-white shadow-sm">
+                                            <tr className="text-[10px] font-black text-slate-400 uppercase border-b bg-slate-50/50">
+                                                <th className="py-3 px-6">Vehículo</th>
+                                                <th className="py-3 px-6">Folio</th>
+                                                <th className="py-3 px-6">Uso Para</th>
+                                                <th className="py-3 px-6 text-right">Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {todaySalesDetails.map((t, i) => (
+                                                <tr key={i} className="text-sm hover:bg-blue-50/30 transition-colors group">
+                                                    <td className="py-4 px-6">
+                                                        <div className="flex flex-col">
+                                                            <span className="font-black text-slate-800">#{t.vehiculoId}</span>
+                                                            <span className="text-[10px] text-slate-400 font-bold uppercase">{t.patente}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td className="py-4 px-6">
+                                                        <span className="px-2 py-1 bg-slate-100 rounded text-[11px] font-mono text-slate-500 border border-slate-200 group-hover:bg-white transition-colors">
+                                                            {t.folio}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-4 px-6">
+                                                        <span className="text-slate-600 font-medium">
+                                                            {new Date(t.fechaUso).toLocaleDateString()}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-4 px-6 text-right">
+                                                        <span className="font-black text-blue-600">${t.valor.toLocaleString()}</span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {todaySalesDetails.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={4} className="py-12 text-center">
+                                                        <div className="flex flex-col items-center gap-2 text-slate-400">
+                                                            <CreditCard size={32} className="opacity-20" />
+                                                            <p className="italic font-medium">No se han registrado ventas el día de hoy.</p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="p-4 bg-slate-50 border-t flex justify-between items-center px-8">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Total Hoy: {todaySalesDetails.length} Ventas</span>
+                                    <span className="text-lg font-black text-slate-800">${stats.salesToday.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal Detalle de Recaudación Mensual */}
+                    {showMonthSalesModal && (
+                        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+                            <div className="w-full max-w-2xl overflow-hidden bg-white rounded-2xl shadow-2xl animate-in fade-in zoom-in duration-200">
+                                <div className="p-6 border-b flex justify-between items-center bg-green-50">
+                                    <div className="flex items-center gap-3">
+                                        <div className="p-2 bg-green-100 text-green-600 rounded-lg">
+                                            <CreditCard size={20} />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-xl font-bold text-slate-800">Recaudación {new Date().toLocaleDateString('es-CL', { month: 'long', year: 'numeric' })}</h3>
+                                            <p className="text-xs text-slate-500 font-medium whitespace-nowrap">Resumen diario de ventas del mes en curso.</p>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => setShowMonthSalesModal(false)}
+                                        className="p-2 hover:bg-green-100 rounded-full transition text-slate-400 hover:text-green-600"
+                                    >
+                                        <X size={20} />
+                                    </button>
+                                </div>
+                                <div className="max-h-[60vh] overflow-y-auto">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead className="sticky top-0 bg-white shadow-sm">
+                                            <tr className="text-[10px] font-black text-slate-400 uppercase border-b bg-slate-50/50">
+                                                <th className="py-3 px-6">Fecha</th>
+                                                <th className="py-3 px-6 text-center">Tarjetas</th>
+                                                <th className="py-3 px-6 text-right">Total Diario</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100">
+                                            {monthSalesDetails.map((day, i) => (
+                                                <tr key={i} className="text-sm hover:bg-green-50/30 transition-colors">
+                                                    <td className="py-4 px-6 font-bold text-slate-700">
+                                                        {new Date(day.date + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}
+                                                    </td>
+                                                    <td className="py-4 px-6 text-center">
+                                                        <span className="px-3 py-1 bg-slate-100 rounded-full text-xs font-black text-slate-600">
+                                                            {day.count} {day.count === 1 ? 'tarjeta' : 'tarjetas'}
+                                                        </span>
+                                                    </td>
+                                                    <td className="py-4 px-6 text-right font-black text-slate-900">
+                                                        ${day.total.toLocaleString()}
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            {monthSalesDetails.length === 0 && (
+                                                <tr>
+                                                    <td colSpan={3} className="py-12 text-center text-slate-400 italic">No hay ventas registradas este mes.</td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div className="p-4 bg-slate-50 border-t flex justify-between items-center px-8">
+                                    <span className="text-xs font-bold text-slate-500 uppercase">Total Mensual Acumulado:</span>
+                                    <span className="text-lg font-black text-green-600 font-mono">${stats.salesMonth.toLocaleString()}</span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </>
             )}
 
@@ -616,6 +942,77 @@ const AdminDashboard: React.FC = () => {
                 </div>
             )}
 
+            {activeAdminTab === 'reportes' && (
+                <div className="space-y-8">
+                    {/* Reporte Diario */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                            <div>
+                                <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                    <Download className="text-blue-500" size={24} />
+                                    Reporte de Ventas Diarias
+                                </h3>
+                                <p className="text-slate-500 text-sm">Selecciona una fecha específica para exportar el detalle de ventas.</p>
+                            </div>
+                            <div className="flex items-center gap-3 w-full md:w-auto">
+                                <input 
+                                    type="date" 
+                                    value={selectedReportDate}
+                                    onChange={(e) => setSelectedReportDate(e.target.value)}
+                                    className="flex-1 md:w-48 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-all"
+                                />
+                                <button
+                                    onClick={() => downloadDailyReport(selectedReportDate)}
+                                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-900/20"
+                                >
+                                    <Download size={16} />
+                                    Exportar CSV
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Historial Mensual */}
+                    <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                        <div className="mb-6">
+                            <h3 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+                                <Calendar className="text-orange-500" size={24} />
+                                Reportes Mensuales (Folios)
+                            </h3>
+                            <p className="text-slate-500 text-sm">Resumen de folios por cupo para los últimos 12 meses.</p>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {historicalMonths.map((date, idx) => {
+                                const isCurrent = idx === 0;
+                                return (
+                                    <div key={idx} className="p-4 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between group hover:border-orange-200 hover:bg-orange-50/30 transition-all">
+                                    <div className="flex items-center gap-3">
+                                        <div className={`p-2 rounded-lg ${isCurrent ? 'bg-orange-100 text-orange-600' : 'bg-slate-200 text-slate-500'}`}>
+                                            <Calendar size={20} />
+                                        </div>
+                                        <div>
+                                            <p className="text-sm font-bold text-slate-700 capitalize">
+                                                {date.toLocaleString('es-CL', { month: 'long', year: 'numeric' })}
+                                            </p>
+                                            {isCurrent && <span className="text-[10px] bg-orange-200 text-orange-700 px-1.5 py-0.5 rounded font-black uppercase">Mes Actual</span>}
+                                        </div>
+                                    </div>
+                                    <button
+                                        onClick={() => downloadReport(date)}
+                                        className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-orange-600 hover:border-orange-500 transition-all shadow-sm group-hover:shadow-md active:scale-95"
+                                        title="Descargar CSV"
+                                    >
+                                        <Download size={18} />
+                                    </button>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+            )}
+
             {activeAdminTab === 'impresion' && (
                 <div className="bg-white p-8 rounded-xl shadow-sm border border-slate-200">
                     <div className="flex justify-between items-center mb-6">
@@ -637,7 +1034,7 @@ const AdminDashboard: React.FC = () => {
                                             field === 'fechaEmision' ? 'Fecha de Emisión' :
                                                 field === 'vehiculoId' ? 'ID Vehículo (Número)' :
                                                     field === 'fechaUso' ? 'Fecha de Uso' :
-                                                        field === 'variacion' ? 'Variación (L/N)' : 'Nombre del Conductor'}
+                                                        field === 'variacion' ? 'Ruta / Variación' : 'Nombre del Conductor'}
                                     </h4>
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
@@ -685,11 +1082,208 @@ const AdminDashboard: React.FC = () => {
                                     <span style={{ position: 'absolute', top: printSettings.fechaEmision.top, left: printSettings.fechaEmision.left, fontSize: printSettings.fechaEmision.fontSize }}>25/12/2023</span>
                                     <span style={{ position: 'absolute', top: printSettings.vehiculoId.top, left: printSettings.vehiculoId.left, fontSize: printSettings.vehiculoId.fontSize, fontWeight: '900' }}>#500</span>
                                     <span style={{ position: 'absolute', top: printSettings.fechaUso.top, left: printSettings.fechaUso.left, fontSize: printSettings.fechaUso.fontSize, fontWeight: 'bold' }}>26/12/2023</span>
-                                    <span style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize, color: '#f97316', fontWeight: 'bold' }}>NORMAL</span>
+                                    <span style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
                                     <span style={{ position: 'absolute', top: printSettings.conductor.top, left: printSettings.conductor.left, fontSize: printSettings.conductor.fontSize }}>JUAN PEREZ</span>
                                 </div>
                                 <div className="mt-4 text-center text-[10px] text-slate-500 uppercase font-bold">
                                     Representación Visual (Escala Reducida)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {activeAdminTab === 'rotacionR' && (
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                    <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                        <div>
+                            <h3 className="text-xl font-bold text-slate-800">Planificación Variante R (Variante 1)</h3>
+                            <p className="text-sm text-slate-500">Listado mensual de vehículos en rotación especial.</p>
+                        </div>
+                        <div className="flex items-center gap-3 bg-slate-50 p-2 rounded-xl border border-slate-200">
+                            <button 
+                                onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() - 1, 1))}
+                                className="p-2 hover:bg-white rounded-lg transition-all shadow-sm"
+                            >
+                                <ChevronLeft size={20} />
+                            </button>
+                            <span className="text-sm font-black uppercase min-w-[160px] text-center text-slate-700">
+                                {calMonth.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                            </span>
+                            <button 
+                                onClick={() => setCalMonth(new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 1))}
+                                className="p-2 hover:bg-white rounded-lg transition-all shadow-sm"
+                            >
+                                <ChevronRight size={20} />
+                            </button>
+                        </div>
+                        <button
+                            onClick={handleGenerateMonthlyRotation}
+                            className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest flex items-center gap-2 shadow-lg shadow-orange-900/20 transition-all active:scale-95"
+                        >
+                            <Calendar size={18} />
+                            Generar Plan Mensual
+                        </button>
+                        <button
+                            onClick={() => {
+                                if(window.confirm('¿Seguro que deseas limpiar TODA la planificación de este mes? Los inspectores no verán ningún auto en R.')) {
+                                    const dCount = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+                                    const clearBatch: Record<string, number[]> = {};
+                                    for(let i=1; i<=dCount; i++) {
+                                        clearBatch[getLocalDateStr(new Date(calMonth.getFullYear(), calMonth.getMonth(), i))] = [];
+                                    }
+                                    batchUpdateAsignacionesR(clearBatch);
+                                }
+                            }}
+                            className="bg-slate-200 hover:bg-slate-300 text-slate-600 px-4 py-3 rounded-xl font-bold text-xs uppercase transition-all"
+                        >
+                            Limpiar Mes
+                        </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 xl:grid-cols-4 gap-8">
+                        {/* Listado Mensual */}
+                        <div className="xl:col-span-3">
+                            <div className="border rounded-2xl overflow-hidden shadow-sm bg-slate-50">
+                                <div className="max-h-[700px] overflow-y-auto scrollbar-thin scrollbar-thumb-slate-300">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead className="sticky top-0 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest z-20">
+                                            <tr>
+                                                <th className="px-6 py-4 border-r border-slate-700 w-24">Día</th>
+                                                <th className="px-6 py-4 border-r border-slate-700 text-orange-400">Variante 1 - De Troncal</th>
+                                                <th className="px-6 py-4 text-blue-400">Variante 1 - De Variante 2</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-200 bg-white">
+                                            {(() => {
+                                                const dCount = new Date(calMonth.getFullYear(), calMonth.getMonth() + 1, 0).getDate();
+                                                const rows = [];
+                                                for (let i = 1; i <= dCount; i++) {
+                                                    const currentDayDate = new Date(calMonth.getFullYear(), calMonth.getMonth(), i);
+                                                    const dStr = getLocalDateStr(currentDayDate);
+                                                    const isSelected = dStr === selectedDateR;
+                                                    const isToday = dStr === getLocalDateStr(new Date());
+                                                    
+                                                    const vehiclesOnR = asignacionesR[dStr] || vehiculos.filter(v => getDynamicVariacion(v.id, new Date(dStr + 'T12:00:00')) === 'R').map(v => v.id);
+                                                    
+                                                    const troncalR = vehiclesOnR.filter(id => {
+                                                        const v = vehiculos.find(veh => veh.id === id);
+                                                        return v?.rutaPrincipal === 'Troncal' || !v?.rutaPrincipal;
+                                                    }).sort((a,b) => a-b);
+                                                    
+                                                    const variante2R = vehiclesOnR.filter(id => {
+                                                        const v = vehiculos.find(veh => veh.id === id);
+                                                        return v?.rutaPrincipal === 'Variante 2';
+                                                    }).sort((a,b) => a-b);
+
+                                                    rows.push(
+                                                        <tr 
+                                                            key={dStr} 
+                                                            onClick={() => setSelectedDateR(dStr)}
+                                                            className={`
+                                                                cursor-pointer transition-all border-l-4
+                                                                ${isSelected ? 'bg-orange-50 border-l-orange-500' : 'hover:bg-slate-50 border-l-transparent'}
+                                                                ${isToday && !isSelected ? 'bg-blue-50/30' : ''}
+                                                            `}
+                                                        >
+                                                            <td className="px-6 py-4">
+                                                                <div className="flex flex-col">
+                                                                    <span className={`text-lg font-black ${isToday ? 'text-orange-600' : 'text-slate-700'}`}>{i}</span>
+                                                                    <span className="text-[10px] text-slate-400 uppercase font-black">
+                                                                        {currentDayDate.toLocaleDateString('es-CL', { weekday: 'short' })}
+                                                                    </span>
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4 border-x border-slate-100">
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {troncalR.map(id => (
+                                                                        <span key={id} className="px-2 py-1 bg-orange-100 text-orange-700 rounded text-[11px] font-bold border border-orange-200 shadow-sm">#{id}</span>
+                                                                    ))}
+                                                                    {troncalR.length === 0 && <span className="text-slate-300 text-[10px] italic">Sin asignación</span>}
+                                                                </div>
+                                                            </td>
+                                                            <td className="px-6 py-4">
+                                                                <div className="flex flex-wrap gap-2">
+                                                                    {variante2R.map(id => (
+                                                                        <span key={id} className="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[11px] font-bold border border-blue-200 shadow-sm">#{id}</span>
+                                                                    ))}
+                                                                    {variante2R.length === 0 && <span className="text-slate-300 text-[10px] italic">Sin asignación</span>}
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                }
+                                                return rows;
+                                            })()}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Panel de Edición Lateral */}
+                        <div className="xl:col-span-1 space-y-6">
+                            <div className="sticky top-6">
+                                <div className="p-6 bg-slate-900 text-white rounded-2xl shadow-xl overflow-hidden relative">
+                                    <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
+                                        <Edit3 size={120} />
+                                    </div>
+                                    
+                                    <h4 className="text-xs font-black text-orange-400 uppercase tracking-widest mb-1">Editor de Turno</h4>
+                                    <h2 className="text-xl font-black mb-6 flex flex-col">
+                                        <span>{new Date(selectedDateR + 'T12:00:00').toLocaleDateString('es-CL', { weekday: 'long' })}</span>
+                                        <span className="text-slate-400 text-sm">{new Date(selectedDateR + 'T12:00:00').toLocaleDateString('es-CL', { day: 'numeric', month: 'long' })}</span>
+                                    </h2>
+                                    
+                                    <div className="space-y-4 relative z-10">
+                                        <div>
+                                            <label className="block text-[10px] font-black text-slate-500 uppercase mb-2">IDs en R (separar por coma)</label>
+                                            <textarea
+                                                className="w-full bg-slate-800 border-2 border-slate-700 rounded-xl p-4 text-orange-400 font-mono text-sm outline-none focus:border-orange-500 transition-all placeholder:text-slate-600"
+                                                rows={5}
+                                                value={editRText}
+                                                onChange={(e) => setEditRText(e.target.value)}
+                                                placeholder="Ej: 101, 102, 103..."
+                                            />
+                                        </div>
+                                        
+                                        <button
+                                            onClick={() => {
+                                                const ids = editRText.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+                                                updateAsignacionesR(selectedDateR, ids);
+                                                alert('Turno actualizado correctamente.');
+                                            }}
+                                            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-black py-4 rounded-xl transition-all shadow-lg shadow-orange-900/40 uppercase text-xs tracking-widest"
+                                        >
+                                            Guardar Plan
+                                        </button>
+                                        
+                                        <button
+                                            onClick={() => {
+                                                if(window.confirm('¿Deseas volver a la rotación automática para este día?')) {
+                                                    updateAsignacionesR(selectedDateR, null);
+                                                }
+                                            }}
+                                            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-400 font-bold py-3 rounded-xl transition-all uppercase text-[10px] tracking-widest"
+                                        >
+                                            Restaurar Automático
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-6 p-6 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50">
+                                    <h4 className="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest text-center">Leyenda</h4>
+                                    <div className="space-y-4">
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-4 h-4 rounded bg-orange-100 border border-orange-200 mt-0.5" />
+                                            <p className="text-[10px] text-slate-500 leading-tight">Vehículos cuya ruta base es <strong>Troncal</strong> pasando a R.</p>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <div className="w-4 h-4 rounded bg-blue-100 border border-blue-200 mt-0.5" />
+                                            <p className="text-[10px] text-slate-500 leading-tight">Vehículos cuya ruta base es <strong>Variante 2</strong> pasando a R.</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -755,7 +1349,7 @@ const AdminDashboard: React.FC = () => {
                                         })}
                                     </div>
                                     <div className="mt-8 flex flex-col gap-2 p-4 bg-white rounded-xl border border-slate-100 italic text-[11px] text-slate-400">
-                                        <p className="flex items-center gap-2 font-bold"><div className="w-3 h-3 bg-red-500 rounded" /> Rojo: Días bloqueados (No hábiles)</p>
+                                        <div className="flex items-center gap-2 font-bold mb-1"><div className="w-3 h-3 bg-red-500 rounded" /> Rojo: Días bloqueados (No hábiles)</div>
                                         <p>Los días en rojo no permitirán al inspector emitir tarjetas.</p>
                                     </div>
                                 </>
@@ -768,7 +1362,7 @@ const AdminDashboard: React.FC = () => {
     );
 };
 
-const StatCard: React.FC<{ title: string, value: string, icon: any, color: string }> = ({ title, value, icon: Icon, color }) => {
+const StatCard: React.FC<{ title: string, value: string, icon: any, color: string, onClick?: () => void }> = ({ title, value, icon: Icon, color, onClick }) => {
     const colors: Record<string, string> = {
         blue: 'bg-blue-50 text-blue-600',
         green: 'bg-green-50 text-green-600',
@@ -777,7 +1371,10 @@ const StatCard: React.FC<{ title: string, value: string, icon: any, color: strin
     };
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4">
+        <div 
+            onClick={onClick}
+            className={`bg-white p-6 rounded-xl shadow-sm border border-slate-200 flex items-center gap-4 ${onClick ? 'cursor-pointer hover:border-blue-400 hover:shadow-md transition-all active:scale-95' : ''}`}
+        >
             <div className={`p-4 rounded-xl ${colors[color]}`}>
                 <Icon size={24} />
             </div>
