@@ -53,7 +53,8 @@ body {
   .ticket-print {
     border: 1px dashed #ccc !important;
     border-radius: 0 !important;
-    margin-bottom: 20px !important;
+    page-break-after: always !important;
+    break-after: page !important;
     box-shadow: none !important;
     page-break-inside: avoid;
     break-inside: avoid;
@@ -70,7 +71,10 @@ body {
     border: none !important;
     background: transparent !important;
     padding: 0 !important;
-    margin-bottom: 5cm !important; /* Espacio entre tickets si son varios */
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    page-break-after: always !important;
+    break-after: page !important;
     position: relative !important;
     min-height: 10cm; /* Altura mínima estimada de una tarjeta física */
   }

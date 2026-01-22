@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useStore } from '../contexts/StateContext';
 import { 
     Plus, Car, Trash2, Edit3, Eye, X, FileText, 
-    ShieldAlert, ShieldCheck, History, Save, LayoutGrid, List, Search 
+    ShieldAlert, ShieldCheck, History, Save, LayoutGrid, List, Search,
+    Download, ChevronDown, FileCode
 } from 'lucide-react';
 import type { Vehiculo, RutaPrincipal } from '../types';
+import * as XLSX from 'xlsx';
 
 const MOTIVOS_BLOQUEO = [
     'Suspensión Administrativa',
@@ -41,6 +43,35 @@ const GestionVehiculos: React.FC = () => {
     const [viewMode, setViewMode] = useState<'cards' | 'list'>('list');
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnio, setFilterAnio] = useState<string>('');
+    const [showExportMenu, setShowExportMenu] = useState(false);
+
+    const exportVehiculos = (format: 'csv' | 'xlsx') => {
+        const data = filteredVehiculos.map(v => {
+            const conductor = conductores.find(c => c.vehiculoId === v.id);
+            return {
+                Cupo: v.id,
+                Modelo: v.modelo,
+                Patente: v.patente,
+                Propietario: v.propietario,
+                Conductor: conductor ? conductor.nombre : 'Sin asignar',
+                Estado: v.bloqueado ? 'Bloqueado' : 'Habilitado',
+                Deuda: v.estadoCuenta.deudas,
+                Año: v.anio,
+                'Ruta Principal': v.rutaPrincipal
+            };
+        });
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Vehículos");
+
+        if (format === 'csv') {
+            XLSX.writeFile(workbook, `Vehiculos_${activeRouteTab.replace(' ', '_')}.csv`, { bookType: 'csv' });
+        } else {
+            XLSX.writeFile(workbook, `Vehiculos_${activeRouteTab.replace(' ', '_')}.xlsx`);
+        }
+        setShowExportMenu(false);
+    };
 
     // Form states
     const [formData, setFormData] = useState({
@@ -134,6 +165,22 @@ const GestionVehiculos: React.FC = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    <button 
+                        onClick={() => exportVehiculos('csv')}
+                        className="flex items-center gap-2 bg-white text-slate-700 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition font-bold text-xs"
+                        title="Exportar como CSV"
+                    >
+                        <FileCode size={18} />
+                        CSV
+                    </button>
+                    <button 
+                        onClick={() => exportVehiculos('xlsx')}
+                        className="flex items-center gap-2 bg-white text-slate-700 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition font-bold text-xs"
+                        title="Exportar como Excel"
+                    >
+                        <FileText size={18} />
+                        Excel
+                    </button>
                     <button 
                         onClick={() => {
                             setShowAddForm(true);

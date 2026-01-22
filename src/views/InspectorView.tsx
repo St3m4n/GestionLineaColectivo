@@ -669,28 +669,42 @@ const InspectorView: React.FC = () => {
                       </div>
                       <div className="text-right">
                         <p className="text-lg font-bold text-red-600 relative min-h-[1.5em]">
-                          <span className="value-dynamic" style={{ position: 'absolute', top: printSettings.folio.top, left: printSettings.folio.left, fontSize: printSettings.folio.fontSize }}>{ticket.folio}</span>
+                          <span className="value-dynamic" style={{ position: 'absolute', top: `${printSettings.folio.top}px`, left: `${printSettings.folio.left}px`, fontSize: `${printSettings.folio.fontSize}px` }}>
+                            {ticket.folio.startsWith('F-') ? ticket.folio.substring(2) : ticket.folio}
+                          </span>
                         </p>
                         <p className="text-xs text-slate-500 relative min-h-[1em]">
-                          <span className="value-dynamic" style={{ position: 'absolute', top: printSettings.fechaEmision.top, left: printSettings.fechaEmision.left, fontSize: printSettings.fechaEmision.fontSize }}>{new Date(ticket.fechaEmision).toLocaleDateString()}</span>
+                          <span className="value-dynamic" style={{ position: 'absolute', top: `${printSettings.fechaEmision.top}px`, left: `${printSettings.fechaEmision.left}px`, fontSize: `${printSettings.fechaEmision.fontSize}px` }}>
+                            {new Date(ticket.fechaEmision).toLocaleDateString()}
+                          </span>
                         </p>
                       </div>
                     </div>
 
                     <div className="grid grid-cols-4 gap-8 py-4 data-section">
                       <div className="field-group relative min-h-[4em]">
-                        <p className="text-2xl font-black value-dynamic" style={{ position: 'absolute', top: printSettings.vehiculoId.top, left: printSettings.vehiculoId.left, fontSize: printSettings.vehiculoId.fontSize }}>#{ticket.vehiculoId}</p>
-                        <p className="text-sm value-dynamic">{foundVehiculo?.patente}</p>
+                        <p className="text-2xl font-black value-dynamic" style={{ position: 'absolute', top: `${printSettings.vehiculoId.top}px`, left: `${printSettings.vehiculoId.left}px`, fontSize: `${printSettings.vehiculoId.fontSize}px` }}>
+                          {ticket.vehiculoId}
+                        </p>
+                        <p className="text-sm value-dynamic" style={{ position: 'absolute', top: `${printSettings.patente.top}px`, left: `${printSettings.patente.left}px`, fontSize: `${printSettings.patente.fontSize}px` }}>
+                          {foundVehiculo?.patente}
+                        </p>
                       </div>
                       <div className="field-group relative min-h-[4em]">
-                        <p className="text-lg font-black uppercase value-dynamic" style={{ position: 'absolute', top: printSettings.fechaUso.top, left: printSettings.fechaUso.left, fontSize: printSettings.fechaUso.fontSize }}>{new Date(ticket.fechaUso).toLocaleDateString()}</p>
-                        <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize }}>{formatRouteDisplay(foundVehiculo, ticket.variacion)}</p>
+                        <p className="text-lg font-black uppercase value-dynamic" style={{ position: 'absolute', top: `${printSettings.fechaUso.top}px`, left: `${printSettings.fechaUso.left}px`, fontSize: `${printSettings.fechaUso.fontSize}px` }}>
+                          {new Date(ticket.fechaUso).toLocaleDateString()}
+                        </p>
+                        <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: `${printSettings.variacion.top}px`, left: `${printSettings.variacion.left}px`, fontSize: `${printSettings.variacion.fontSize}px` }}>
+                          {formatRouteDisplay(foundVehiculo, ticket.variacion)}
+                        </p>
                       </div>
                       <div className="field-group col-span-1 relative min-h-[4em]">
-                        <p className="text-sm font-bold value-dynamic" style={{ position: 'absolute', top: printSettings.conductor.top, left: printSettings.conductor.left, fontSize: printSettings.conductor.fontSize }}>{ticket.nombreConductor}</p>
+                        <p className="text-sm font-bold value-dynamic" style={{ position: 'absolute', top: `${printSettings.conductor.top}px`, left: `${printSettings.conductor.left}px`, fontSize: `${printSettings.conductor.fontSize}px` }}>
+                          {ticket.nombreConductor}
+                        </p>
                       </div>
                       <div className="text-right field-group">
-                        <p className="text-2xl font-black value-dynamic">${ticket.valor.toLocaleString()}</p>
+                        {/* El precio ha sido removido por requerimiento del usuario */}
                       </div>
                     </div>
                   </div>

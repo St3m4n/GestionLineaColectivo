@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useStore } from '../contexts/StateContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
+import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search, ChevronLeft, ChevronRight, Calendar, ChevronDown, FileCode, FileText } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import type { Multa } from '../types';
 
 const AdminDashboard: React.FC = () => {
@@ -19,7 +20,10 @@ const AdminDashboard: React.FC = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const [activeAdminTab, setActiveAdminTab] = React.useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR'>('resumen');
+    const [activeAdminTab, setActiveAdminTab] = useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR'>('resumen');
+    const [showDailyExportMenu, setShowDailyExportMenu] = useState(false);
+    const [showMainExportMenu, setShowMainExportMenu] = useState(false);
+    const [showMonthlyExportMenu, setShowMonthlyExportMenu] = useState<number | null>(null);
 
     // Estado para edición de multas
     const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
@@ -190,79 +194,78 @@ const AdminDashboard: React.FC = () => {
         }).sort((a, b) => new Date(a.vencimientoLicencia).getTime() - new Date(b.vencimientoLicencia).getTime());
     }, [conductores]);
 
-    const downloadDailyReport = (dateStr: string) => {
+    const downloadDailyReport = (dateStr: string, format: 'csv' | 'xlsx' = 'csv') => {
         const dayTickets = tarjetas.filter(t => getLocalDateStr(new Date(t.fechaEmision)) === dateStr);
         
-        const headers = ["Folio", "Venta", "Cupo", "Patente", "Conductor", "Ruta/Variación", "Fecha Uso"];
-        const rows = dayTickets.map(t => {
+        const data = dayTickets.map(t => {
             const v = vehiculos.find(veh => veh.id === t.vehiculoId);
             const c = conductores.find(cond => cond.vehiculoId === t.vehiculoId);
-            return [
-                t.folio,
-                t.valor,
-                t.vehiculoId,
-                `"${v?.patente || 'N/A'}"`,
-                `"${c?.nombre || 'N/A'}"`,
-                `"${t.variacion}"`,
-                t.fechaUso.split('T')[0]
-            ];
+            return {
+                Cupo: t.vehiculoId,
+                Folio: t.folio,
+                Venta: t.valor,
+                Patente: v?.patente || 'N/A',
+                Conductor: c?.nombre || 'N/A',
+                'Ruta/Variación': t.variacion,
+                'Fecha Uso': t.fechaUso.split('T')[0]
+            };
         });
 
-        const csvString = [headers.join(","), ...rows.map(r => r.join(","))].join("\n");
-        const blob = new Blob(["\ufeff" + csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `Ventas_Diarias_${dateStr}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Ventas");
+
+        if (format === 'csv') {
+            XLSX.writeFile(workbook, `Ventas_Diarias_${dateStr}.csv`, { bookType: 'csv' });
+        } else {
+            XLSX.writeFile(workbook, `Ventas_Diarias_${dateStr}.xlsx`);
+        }
+        setShowDailyExportMenu(false);
     };
 
-    const downloadReport = (targetDate: Date = new Date()) => {
+    const downloadReport = (targetDate: Date = new Date(), format: 'csv' | 'xlsx' = 'csv') => {
         const year = targetDate.getFullYear();
         const month = targetDate.getMonth();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
-        const headers = ["Cupo", ...Array.from({ length: daysInMonth }, (_, i) => i + 1), "Total"];
         
         const monthTickets = tarjetas.filter(t => {
             const d = new Date(t.fechaUso);
             return d.getMonth() === month && d.getFullYear() === year;
         });
 
-        const rows = [...vehiculos].sort((a,b) => a.id - b.id).map(v => {
-            const row = [v.id.toString()];
+        const data = [...vehiculos].sort((a,b) => a.id - b.id).map(v => {
+            const row: any = { "Cupo": v.id };
             let totalMonthTickets = 0;
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
                 const ticket = monthTickets.find(t => t.vehiculoId === v.id && t.fechaUso.startsWith(dateStr));
                 
+                const dayKey = day.toString();
                 if (ticket) {
-                    row.push(ticket.folio);
+                    row[dayKey] = ticket.folio;
                     totalMonthTickets++;
                 } else {
-                    row.push("");
+                    row[dayKey] = "";
                 }
             }
-            row.push(totalMonthTickets.toString());
-            return row.join(",");
+            row["Total"] = totalMonthTickets;
+            return row;
         });
 
-        const csvString = [headers.join(","), ...rows].join("\n");
-        const blob = new Blob(["\ufeff" + csvString], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
+        const headers = ["Cupo", ...Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()), "Total"];
+        const worksheet = XLSX.utils.json_to_sheet(data, { header: headers });
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Reporte");
 
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        const fileName = `Reporte_Folios_${targetDate.toLocaleString('es-CL', { month: 'long', year: 'numeric' }).replace(' ', '_')}.csv`;
-        link.setAttribute("download", fileName);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        if (format === 'csv') {
+            XLSX.writeFile(workbook, `Reporte_Folios_${targetDate.getMonth() + 1}_${year}.csv`, { bookType: 'csv' });
+        } else {
+            const fileName = `Reporte_Folios_${targetDate.toLocaleString('es-CL', { month: 'long', year: 'numeric' }).replace(' ', '_')}.xlsx`;
+            XLSX.writeFile(workbook, fileName);
+        }
+        setShowMainExportMenu(false);
+        setShowMonthlyExportMenu(null);
     };
 
     // Generar lista de los últimos 12 meses
@@ -285,11 +288,18 @@ const AdminDashboard: React.FC = () => {
                 </div>
                 <div className="flex gap-2 w-full md:w-auto">
                     <button
-                        onClick={() => downloadReport()}
-                        className="flex items-center gap-2 bg-slate-100 text-slate-700 px-4 py-2 rounded-lg hover:bg-slate-200 transition flex-1 justify-center"
+                        onClick={() => downloadReport(new Date(), 'csv')}
+                        className="flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-200 transition font-bold text-xs"
                     >
-                        <Download size={18} />
-                        Exportar CSV
+                        <FileCode size={18} />
+                        CSV
+                    </button>
+                    <button
+                        onClick={() => downloadReport(new Date(), 'xlsx')}
+                        className="flex items-center gap-2 bg-slate-100 text-slate-700 px-3 py-2 rounded-lg hover:bg-slate-200 transition font-bold text-xs"
+                    >
+                        <FileText size={18} />
+                        Excel
                     </button>
                 </div>
             </header>
@@ -961,13 +971,22 @@ const AdminDashboard: React.FC = () => {
                                     onChange={(e) => setSelectedReportDate(e.target.value)}
                                     className="flex-1 md:w-48 bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 text-sm font-bold text-slate-700 outline-none focus:border-blue-500 transition-all"
                                 />
-                                <button
-                                    onClick={() => downloadDailyReport(selectedReportDate)}
-                                    className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-black text-xs uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-900/20"
-                                >
-                                    <Download size={16} />
-                                    Exportar CSV
-                                </button>
+                                <div className="flex gap-2">
+                                    <button
+                                        onClick={() => downloadDailyReport(selectedReportDate, 'csv')}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-black text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-900/20"
+                                    >
+                                        <FileCode size={14} />
+                                        CSV
+                                    </button>
+                                    <button
+                                        onClick={() => downloadDailyReport(selectedReportDate, 'xlsx')}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-black text-[10px] uppercase tracking-widest flex items-center gap-2 transition-all active:scale-95 shadow-lg shadow-blue-900/20"
+                                    >
+                                        <FileText size={14} />
+                                        Excel
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -998,13 +1017,22 @@ const AdminDashboard: React.FC = () => {
                                             {isCurrent && <span className="text-[10px] bg-orange-200 text-orange-700 px-1.5 py-0.5 rounded font-black uppercase">Mes Actual</span>}
                                         </div>
                                     </div>
-                                    <button
-                                        onClick={() => downloadReport(date)}
-                                        className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-orange-600 hover:border-orange-500 transition-all shadow-sm group-hover:shadow-md active:scale-95"
-                                        title="Descargar CSV"
-                                    >
-                                        <Download size={18} />
-                                    </button>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => downloadReport(date, 'csv')}
+                                            className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-orange-600 hover:border-orange-500 transition-all shadow-sm group-hover:shadow-md active:scale-95"
+                                            title="Descargar CSV"
+                                        >
+                                            <FileCode size={18} />
+                                        </button>
+                                        <button
+                                            onClick={() => downloadReport(date, 'xlsx')}
+                                            className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-orange-600 hover:border-orange-500 transition-all shadow-sm group-hover:shadow-md active:scale-95"
+                                            title="Descargar Excel"
+                                        >
+                                            <FileText size={18} />
+                                        </button>
+                                    </div>
                                 </div>
                             );
                         })}
@@ -1026,15 +1054,16 @@ const AdminDashboard: React.FC = () => {
                         {/* Controles */}
                         <div className="space-y-6">
                             {Object.keys(printSettings)
-                                .filter(f => !['patente', 'valor'].includes(f))
+                                .filter(f => !['valor'].includes(f))
                                 .map((field) => (
                                 <div key={field} className="p-4 border rounded-lg bg-slate-50 space-y-3">
                                     <h4 className="font-bold text-sm uppercase text-slate-700 border-b pb-1 mb-2 italic">
                                         {field === 'folio' ? 'Número de Folio' :
                                             field === 'fechaEmision' ? 'Fecha de Emisión' :
                                                 field === 'vehiculoId' ? 'ID Vehículo (Número)' :
-                                                    field === 'fechaUso' ? 'Fecha de Uso' :
-                                                        field === 'variacion' ? 'Ruta / Variación' : 'Nombre del Conductor'}
+                                                    field === 'patente' ? 'Patente Vehículo' :
+                                                        field === 'fechaUso' ? 'Fecha de Uso' :
+                                                            field === 'variacion' ? 'Ruta / Variación' : 'Nombre del Conductor'}
                                     </h4>
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
@@ -1078,12 +1107,13 @@ const AdminDashboard: React.FC = () => {
                                     </div>
 
                                     {/* Puntos de datos */}
-                                    <span style={{ position: 'absolute', top: printSettings.folio.top, left: printSettings.folio.left, fontSize: printSettings.folio.fontSize, fontWeight: 'bold' }}>F-1234</span>
-                                    <span style={{ position: 'absolute', top: printSettings.fechaEmision.top, left: printSettings.fechaEmision.left, fontSize: printSettings.fechaEmision.fontSize }}>25/12/2023</span>
-                                    <span style={{ position: 'absolute', top: printSettings.vehiculoId.top, left: printSettings.vehiculoId.left, fontSize: printSettings.vehiculoId.fontSize, fontWeight: '900' }}>#500</span>
-                                    <span style={{ position: 'absolute', top: printSettings.fechaUso.top, left: printSettings.fechaUso.left, fontSize: printSettings.fechaUso.fontSize, fontWeight: 'bold' }}>26/12/2023</span>
-                                    <span style={{ position: 'absolute', top: printSettings.variacion.top, left: printSettings.variacion.left, fontSize: printSettings.variacion.fontSize, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
-                                    <span style={{ position: 'absolute', top: printSettings.conductor.top, left: printSettings.conductor.left, fontSize: printSettings.conductor.fontSize }}>JUAN PEREZ</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.folio.top}px`, left: `${printSettings.folio.left}px`, fontSize: `${printSettings.folio.fontSize}px`, fontWeight: 'bold' }}>1234</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.fechaEmision.top}px`, left: `${printSettings.fechaEmision.left}px`, fontSize: `${printSettings.fechaEmision.fontSize}px` }}>25/12/2023</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.vehiculoId.top}px`, left: `${printSettings.vehiculoId.left}px`, fontSize: `${printSettings.vehiculoId.fontSize}px`, fontWeight: '900' }}>500</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.patente.top}px`, left: `${printSettings.patente.left}px`, fontSize: `${printSettings.patente.fontSize}px` }}>ABCD-12</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.fechaUso.top}px`, left: `${printSettings.fechaUso.left}px`, fontSize: `${printSettings.fechaUso.fontSize}px`, fontWeight: 'bold' }}>26/12/2023</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.variacion.top}px`, left: `${printSettings.variacion.left}px`, fontSize: `${printSettings.variacion.fontSize}px`, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.conductor.top}px`, left: `${printSettings.conductor.left}px`, fontSize: `${printSettings.conductor.fontSize}px` }}>JUAN PEREZ</span>
                                 </div>
                                 <div className="mt-4 text-center text-[10px] text-slate-500 uppercase font-bold">
                                     Representación Visual (Escala Reducida)

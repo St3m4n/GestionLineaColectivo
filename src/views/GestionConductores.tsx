@@ -3,9 +3,10 @@ import { useStore } from '../contexts/StateContext';
 import { 
     UserPlus, Trash2, Edit3, Eye, X, FileText, 
     ShieldAlert, ShieldCheck, History, Save, Calendar, LayoutGrid, List,
-    Search, ArrowUpDown
+    Search, ArrowUpDown, Download, ChevronDown, FileCode
 } from 'lucide-react';
 import type { Conductor } from '../types';
+import * as XLSX from 'xlsx';
 
 const MOTIVOS_BLOQUEO = [
     'Suspensión Administrativa',
@@ -31,6 +32,29 @@ const GestionConductores: React.FC = () => {
     const [motivoBloqueo, setMotivoBloqueo] = useState(MOTIVOS_BLOQUEO[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState<'nombre' | 'rut' | 'vehiculoId'>('nombre');
+    const [showExportMenu, setShowExportMenu] = useState(false);
+
+    const exportConductores = (format: 'csv' | 'xlsx') => {
+        const data = filteredConductores.map(c => ({
+            RUT: c.rut,
+            Nombre: c.nombre,
+            'Vencimiento Licencia': c.vencimientoLicencia,
+            Cupo: c.vehiculoId || 'Sin asignar',
+            Estado: c.bloqueado ? 'Bloqueado' : 'Habilitado',
+            Pendiente: c.agregadoPorInspector ? 'Sí' : 'No'
+        }));
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Conductores");
+
+        if (format === 'csv') {
+            XLSX.writeFile(workbook, `Conductores_${activeTab}.csv`, { bookType: 'csv' });
+        } else {
+            XLSX.writeFile(workbook, `Conductores_${activeTab}.xlsx`);
+        }
+        setShowExportMenu(false);
+    };
 
     // Form states
     const [formData, setFormData] = useState({
@@ -131,6 +155,20 @@ const GestionConductores: React.FC = () => {
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
+                    <button 
+                        onClick={() => exportConductores('csv')}
+                        className="flex items-center gap-2 bg-white text-slate-700 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition font-bold text-xs"
+                    >
+                        <FileCode size={18} />
+                        CSV
+                    </button>
+                    <button 
+                        onClick={() => exportConductores('xlsx')}
+                        className="flex items-center gap-2 bg-white text-slate-700 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-50 transition font-bold text-xs"
+                    >
+                        <FileText size={18} />
+                        Excel
+                    </button>
                     <button 
                         onClick={() => {
                             setShowAddForm(true);
