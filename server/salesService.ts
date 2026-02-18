@@ -3,6 +3,7 @@ import type {
   AuditoriaAsignacion,
   AuditoriaDesbloqueo,
   Conductor,
+  Controlador,
   CrearVentaPayload,
   FullState,
   Multa,
@@ -14,6 +15,7 @@ import type {
 const VEHICULOS_FILE = 'vehiculos.json';
 const CONDUCTORES_FILE = 'conductores.json';
 const MULTAS_FILE = 'multas.json';
+const CONTROLADOR_FILE = 'controlador.json';
 const AUDITORIA_DESBLOQUEOS_FILE = 'auditoria_desbloqueos.json';
 const AUDITORIA_ASIGNACIONES_FILE = 'auditoria_asignaciones.json';
 const PRINT_SETTINGS_FILE = 'print_settings.json';
@@ -27,8 +29,18 @@ const DEFAULT_PRINT_SETTINGS: PrintSettings = {
   vehiculoId: { top: 120, left: 20, fontSize: 24 },
   patente: { top: 155, left: 20, fontSize: 14 },
   conductor: { top: 120, left: 250, fontSize: 14 },
+  controladorNombre: { top: 240, left: 20, fontSize: 12 },
+  controladorRut: { top: 260, left: 20, fontSize: 11 },
   variacion: { top: 155, left: 160, fontSize: 14 },
   valor: { top: 120, left: 380, fontSize: 24 },
+};
+
+const DEFAULT_CONTROLADOR: Controlador = {
+  nombre: 'Controlador no asignado',
+  rut: '00.000.000-0',
+  telefono: '',
+  email: '',
+  observaciones: ''
 };
 
 const normalizeDateOnly = (value: string): string => {
@@ -98,14 +110,20 @@ export class SalesService {
   }
 
   getFullState(): FullState {
+    const storedPrintSettings = this.store.readObjectFile<PrintSettings>(PRINT_SETTINGS_FILE, DEFAULT_PRINT_SETTINGS);
+
     return {
       vehiculos: this.getVehiculos(),
       conductores: this.getConductores(),
       tarjetas: this.readTarjetasAllShards(),
       multas: this.getMultas(),
+      controlador: this.store.readObjectFile<Controlador>(CONTROLADOR_FILE, DEFAULT_CONTROLADOR),
       auditoriaDesbloqueos: this.store.readArrayFile<AuditoriaDesbloqueo>(AUDITORIA_DESBLOQUEOS_FILE),
       auditoriaAsignaciones: this.store.readArrayFile<AuditoriaAsignacion>(AUDITORIA_ASIGNACIONES_FILE),
-      printSettings: this.store.readObjectFile<PrintSettings>(PRINT_SETTINGS_FILE, DEFAULT_PRINT_SETTINGS),
+      printSettings: {
+        ...DEFAULT_PRINT_SETTINGS,
+        ...storedPrintSettings,
+      },
       diasNoHabiles: this.store.readArrayFile<string>(DIAS_NO_HABILES_FILE),
       asignacionesR: this.store.readObjectFile<Record<string, number[]>>(ASIGNACIONES_R_FILE, {}),
     };
@@ -115,6 +133,7 @@ export class SalesService {
     this.store.writeArrayFileAtomic(VEHICULOS_FILE, payload.vehiculos || []);
     this.store.writeArrayFileAtomic(CONDUCTORES_FILE, payload.conductores || []);
     this.store.writeArrayFileAtomic(MULTAS_FILE, payload.multas || []);
+    this.store.writeObjectFileAtomic(CONTROLADOR_FILE, payload.controlador || DEFAULT_CONTROLADOR);
     this.store.writeArrayFileAtomic(AUDITORIA_DESBLOQUEOS_FILE, payload.auditoriaDesbloqueos || []);
     this.store.writeArrayFileAtomic(AUDITORIA_ASIGNACIONES_FILE, payload.auditoriaAsignaciones || []);
     this.store.writeObjectFileAtomic(PRINT_SETTINGS_FILE, payload.printSettings || DEFAULT_PRINT_SETTINGS);
@@ -133,8 +152,8 @@ export class SalesService {
       const epoch = new Date(2024, 0, 1);
       const diffDays = Math.floor(Math.abs(today.getTime() - epoch.getTime()) / (1000 * 60 * 60 * 24));
 
-      const troncales = vehiculos.filter(v => v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal).sort((a,b) => a.id - b.id);
-      const variante2s = vehiculos.filter(v => v.rutaPrincipal === 'Variante 2').sort((a,b) => a.id - b.id);
+      const troncales = vehiculos.filter(v => !v.eliminado && (v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal)).sort((a,b) => a.id - b.id);
+      const variante2s = vehiculos.filter(v => !v.eliminado && v.rutaPrincipal === 'Variante 2').sort((a,b) => a.id - b.id);
 
       if (troncales.length > 0) {
         const startIdx = (diffDays * 8) % troncales.length;
@@ -165,10 +184,10 @@ export class SalesService {
     const multas = this.getMultas();
     const asignacionesR = this.store.readObjectFile<Record<string, number[]>>(ASIGNACIONES_R_FILE, {});
 
-    const vehiculo = vehiculos.find(v => v.id === payload.vehiculoId);
+    const vehiculo = vehiculos.find(v => v.id === payload.vehiculoId && !v.eliminado);
     if (!vehiculo) return { success: false, message: 'Vehículo no encontrado' };
 
-    const conductor = conductores.find(c => c.vehiculoId === payload.vehiculoId);
+    const conductor = conductores.find(c => c.vehiculoId === payload.vehiculoId && !c.eliminado);
     if (!conductor) return { success: false, message: 'No hay conductor asociado a este vehículo' };
 
     if ((vehiculo.bloqueado || conductor.bloqueado) && !vehiculo.desbloqueoTemporal?.activo) {

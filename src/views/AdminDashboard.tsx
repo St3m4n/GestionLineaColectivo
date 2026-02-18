@@ -7,7 +7,8 @@ import type { Multa } from '../types';
 
 const AdminDashboard: React.FC = () => {
     const {
-        tarjetas, vehiculos, conductores, registrarPago, multas,
+        tarjetas, vehiculos, conductores, vehiculosArchivados, conductoresArchivados,
+        restoreVehiculo, restoreConductor, registrarPago, multas,
         pagarMulta, updateMulta, removeMulta, auditoriaDesbloqueos,
         printSettings, updatePrintSettings, diasNoHabiles, toggleDiaNoHabil,
         asignacionesR, updateAsignacionesR, batchUpdateAsignacionesR, getDynamicVariacion
@@ -20,7 +21,7 @@ const AdminDashboard: React.FC = () => {
         return `${year}-${month}-${day}`;
     };
 
-    const [activeAdminTab, setActiveAdminTab] = useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR'>('resumen');
+    const [activeAdminTab, setActiveAdminTab] = useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR' | 'archivados'>('resumen');
     // Estado para edición de multas
     const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
     const [editFineFormData, setEditFineFormData] = React.useState<Partial<Multa>>({});
@@ -49,8 +50,12 @@ const AdminDashboard: React.FC = () => {
             const diffTime = Math.abs(dateObj.getTime() - epoch.getTime());
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             
-            const troncales = vehiculos.filter(v => v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal).sort((a,b) => a.id - b.id);
-            const variante2s = vehiculos.filter(v => v.rutaPrincipal === 'Variante 2').sort((a,b) => a.id - b.id);
+            const troncales = vehiculos
+                .filter(v => !v.bloqueado && (v.rutaPrincipal === 'Troncal' || !v.rutaPrincipal))
+                .sort((a,b) => a.id - b.id);
+            const variante2s = vehiculos
+                .filter(v => !v.bloqueado && v.rutaPrincipal === 'Variante 2')
+                .sort((a,b) => a.id - b.id);
             
             const selectedIds: number[] = [];
 
@@ -314,6 +319,9 @@ const AdminDashboard: React.FC = () => {
                 <button onClick={() => setActiveAdminTab('rotacionR')} className={`pb-2 font-bold transition ${activeAdminTab === 'rotacionR' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>Rotación R</button>
                 <button onClick={() => setActiveAdminTab('calendario')} className={`pb-2 font-bold transition ${activeAdminTab === 'calendario' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
                     Días Feriados
+                </button>
+                <button onClick={() => setActiveAdminTab('archivados')} className={`pb-2 font-bold transition ${activeAdminTab === 'archivados' ? 'border-b-2 border-orange-500 text-orange-600' : 'text-slate-400'}`}>
+                    Archivados ({vehiculosArchivados.length + conductoresArchivados.length})
                 </button>
             </div>
 
@@ -1056,6 +1064,8 @@ const AdminDashboard: React.FC = () => {
                                             field === 'fechaEmision' ? 'Fecha de Emisión' :
                                                 field === 'vehiculoId' ? 'ID Vehículo (Número)' :
                                                     field === 'patente' ? 'Patente Vehículo' :
+                                                        field === 'controladorNombre' ? 'Nombre Controlador' :
+                                                            field === 'controladorRut' ? 'RUT Controlador' :
                                                         field === 'fechaUso' ? 'Fecha de Uso' :
                                                             field === 'variacion' ? 'Ruta / Variación' : 'Nombre del Conductor'}
                                     </h4>
@@ -1108,6 +1118,8 @@ const AdminDashboard: React.FC = () => {
                                     <span style={{ position: 'absolute', top: `${printSettings.fechaUso.top}px`, left: `${printSettings.fechaUso.left}px`, fontSize: `${printSettings.fechaUso.fontSize}px`, fontWeight: 'bold' }}>26/12/2023</span>
                                     <span style={{ position: 'absolute', top: `${printSettings.variacion.top}px`, left: `${printSettings.variacion.left}px`, fontSize: `${printSettings.variacion.fontSize}px`, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
                                     <span style={{ position: 'absolute', top: `${printSettings.conductor.top}px`, left: `${printSettings.conductor.left}px`, fontSize: `${printSettings.conductor.fontSize}px` }}>JUAN PEREZ</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.controladorNombre.top}px`, left: `${printSettings.controladorNombre.left}px`, fontSize: `${printSettings.controladorNombre.fontSize}px` }}>CONTROLADOR: ANA GÓMEZ</span>
+                                    <span style={{ position: 'absolute', top: `${printSettings.controladorRut.top}px`, left: `${printSettings.controladorRut.left}px`, fontSize: `${printSettings.controladorRut.fontSize}px` }}>RUT: 12.345.678-9</span>
                                 </div>
                                 <div className="mt-4 text-center text-[10px] text-slate-500 uppercase font-bold">
                                     Representación Visual (Escala Reducida)
@@ -1379,6 +1391,90 @@ const AdminDashboard: React.FC = () => {
                                 </>
                             );
                         })()}
+                    </div>
+                </div>
+            )}
+
+            {activeAdminTab === 'archivados' && (
+                <div className="space-y-8">
+                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="px-6 py-4 border-b bg-slate-50 flex items-center justify-between">
+                            <h3 className="font-bold text-slate-800">Vehículos Archivados (Baja Lógica)</h3>
+                            <span className="text-xs font-black text-slate-500 uppercase">{vehiculosArchivados.length} registros</span>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="text-[10px] font-black text-slate-400 uppercase border-b bg-white">
+                                    <tr>
+                                        <th className="px-6 py-3">Cupo</th>
+                                        <th className="px-6 py-3">Patente</th>
+                                        <th className="px-6 py-3">Propietario</th>
+                                        <th className="px-6 py-3">Fecha Baja</th>
+                                        <th className="px-6 py-3 text-right">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {vehiculosArchivados.map(v => (
+                                        <tr key={v.id} className="hover:bg-slate-50">
+                                            <td className="px-6 py-4 font-black text-slate-800">#{v.id}</td>
+                                            <td className="px-6 py-4 text-xs font-mono text-slate-600">{v.patente}</td>
+                                            <td className="px-6 py-4 text-sm text-slate-700">{v.propietario}</td>
+                                            <td className="px-6 py-4 text-xs text-slate-500">{v.fechaEliminacion ? new Date(v.fechaEliminacion).toLocaleString() : '-'}</td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button
+                                                    onClick={() => restoreVehiculo(v.id)}
+                                                    className="bg-green-600 text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-lg hover:bg-green-700 transition"
+                                                >
+                                                    Reactivar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {vehiculosArchivados.length === 0 && (
+                                        <tr><td colSpan={5} className="px-6 py-8 text-center text-slate-400 italic text-sm">No hay vehículos archivados.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div className="px-6 py-4 border-b bg-slate-50 flex items-center justify-between">
+                            <h3 className="font-bold text-slate-800">Conductores Archivados (Baja Lógica)</h3>
+                            <span className="text-xs font-black text-slate-500 uppercase">{conductoresArchivados.length} registros</span>
+                        </div>
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="text-[10px] font-black text-slate-400 uppercase border-b bg-white">
+                                    <tr>
+                                        <th className="px-6 py-3">Nombre</th>
+                                        <th className="px-6 py-3">RUT</th>
+                                        <th className="px-6 py-3">Fecha Baja</th>
+                                        <th className="px-6 py-3 text-right">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-slate-100">
+                                    {conductoresArchivados.map(c => (
+                                        <tr key={c.rut} className="hover:bg-slate-50">
+                                            <td className="px-6 py-4 text-sm font-bold text-slate-800">{c.nombre}</td>
+                                            <td className="px-6 py-4 text-xs font-mono text-slate-600">{c.rut}</td>
+                                            <td className="px-6 py-4 text-xs text-slate-500">{c.fechaEliminacion ? new Date(c.fechaEliminacion).toLocaleString() : '-'}</td>
+                                            <td className="px-6 py-4 text-right">
+                                                <button
+                                                    onClick={() => restoreConductor(c.rut)}
+                                                    className="bg-green-600 text-white text-[10px] font-black uppercase px-3 py-1.5 rounded-lg hover:bg-green-700 transition"
+                                                >
+                                                    Reactivar
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {conductoresArchivados.length === 0 && (
+                                        <tr><td colSpan={4} className="px-6 py-8 text-center text-slate-400 italic text-sm">No hay conductores archivados.</td></tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             )}

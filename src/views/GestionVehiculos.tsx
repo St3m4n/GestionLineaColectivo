@@ -263,7 +263,22 @@ const GestionVehiculos: React.FC = () => {
                         >
                             <div className="flex justify-between items-start mb-2">
                                 <span className="text-2xl font-black text-slate-800">#{v.id}</span>
-                                {v.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
+                                <div className="flex items-center gap-1">
+                                    {v.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (confirm(`¿Eliminar definitivamente el cupo #${v.id}?`)) {
+                                                removeVehiculo(v.id);
+                                                if (selectedVehiculo?.id === v.id) setSelectedVehiculo(null);
+                                            }
+                                        }}
+                                        className="p-1 text-slate-400 hover:text-red-600 transition"
+                                        title="Eliminar cupo"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
                             <p className="font-bold text-slate-700 truncate">{v.modelo}</p>
                             <p className="text-xs text-slate-400 font-mono">{v.patente}</p>
@@ -353,6 +368,19 @@ const GestionVehiculos: React.FC = () => {
                                         <td className="px-6 py-4 text-right">
                                             <button className="text-slate-400 hover:text-orange-600 transition p-2">
                                                 <Eye size={20} />
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (confirm(`¿Eliminar definitivamente el cupo #${v.id}?`)) {
+                                                        removeVehiculo(v.id);
+                                                        if (selectedVehiculo?.id === v.id) setSelectedVehiculo(null);
+                                                    }
+                                                }}
+                                                className="text-slate-400 hover:text-red-600 transition p-2"
+                                                title="Eliminar cupo"
+                                            >
+                                                <Trash2 size={20} />
                                             </button>
                                         </td>
                                     </tr>

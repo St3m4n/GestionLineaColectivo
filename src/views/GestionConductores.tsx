@@ -257,7 +257,22 @@ const GestionConductores: React.FC = () => {
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg ${c.bloqueado ? 'bg-red-100 text-red-600' : 'bg-blue-100 text-blue-600'}`}>
                                     {c.nombre.charAt(0)}
                                 </div>
-                                {c.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
+                                <div className="flex items-center gap-1">
+                                    {c.bloqueado ? <ShieldAlert className="text-red-500" size={20} /> : <ShieldCheck className="text-green-500" size={20} />}
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            if (confirm(`¿Eliminar conductor ${c.nombre}?`)) {
+                                                removeConductor(c.rut);
+                                                if (selectedConductor?.rut === c.rut) setSelectedConductor(null);
+                                            }
+                                        }}
+                                        className="p-1 text-slate-400 hover:text-red-600 transition"
+                                        title="Eliminar conductor"
+                                    >
+                                        <Trash2 size={16} />
+                                    </button>
+                                </div>
                             </div>
                             <p className="font-bold text-slate-700 truncate">{c.nombre}</p>
                             <p className="text-xs text-slate-400 font-mono italic">{c.rut}</p>
@@ -339,6 +354,19 @@ const GestionConductores: React.FC = () => {
                                     <td className="px-6 py-4 text-right">
                                         <button className="text-slate-400 hover:text-blue-600 transition p-1">
                                             <Eye size={18} />
+                                        </button>
+                                        <button
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (confirm(`¿Eliminar conductor ${c.nombre}?`)) {
+                                                    removeConductor(c.rut);
+                                                    if (selectedConductor?.rut === c.rut) setSelectedConductor(null);
+                                                }
+                                            }}
+                                            className="text-slate-400 hover:text-red-600 transition p-1"
+                                            title="Eliminar conductor"
+                                        >
+                                            <Trash2 size={18} />
                                         </button>
                                     </td>
                                 </tr>

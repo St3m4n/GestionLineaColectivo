@@ -8,5 +8,305 @@
     "fechaUso": "2026-02-17T15:00:00.000Z",
     "variacion": "R",
     "valor": 2500
+  },
+  {
+    "id": 1771380249193,
+    "folio": "F-6446-5",
+    "vehiculoId": 5,
+    "nombreConductor": "Chofer Ejemplo 5",
+    "fechaEmision": "2026-02-18T02:04:09.193Z",
+    "fechaUso": "2026-02-17T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
+  },
+  {
+    "id": 1771380598566,
+    "folio": "F-9031-6",
+    "vehiculoId": 6,
+    "nombreConductor": "Chofer Ejemplo 6",
+    "fechaEmision": "2026-02-18T02:09:58.566Z",
+    "fechaUso": "2026-02-17T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914372,
+    "folio": "F-7400-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-17T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914373,
+    "folio": "F-2364-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-01T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914374,
+    "folio": "F-6266-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-07T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914375,
+    "folio": "F-6072-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-14T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914376,
+    "folio": "F-8086-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-06T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914377,
+    "folio": "F-8713-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-13T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914378,
+    "folio": "F-6186-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-05T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914379,
+    "folio": "F-8312-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-12T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914380,
+    "folio": "F-5773-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-04T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914381,
+    "folio": "F-9425-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-11T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914382,
+    "folio": "F-9184-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-03T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914383,
+    "folio": "F-9443-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-10T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914384,
+    "folio": "F-6387-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-02T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914385,
+    "folio": "F-3116-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-09T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914387,
+    "folio": "F-9519-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-16T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914388,
+    "folio": "F-4482-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-23T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914389,
+    "folio": "F-1857-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-24T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914390,
+    "folio": "F-7118-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-25T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914391,
+    "folio": "F-6402-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-19T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914392,
+    "folio": "F-6744-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-26T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914393,
+    "folio": "F-5725-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-20T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914394,
+    "folio": "F-1349-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-27T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914395,
+    "folio": "F-7171-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-21T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914396,
+    "folio": "F-4325-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-28T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914397,
+    "folio": "F-6863-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-18T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914398,
+    "folio": "F-9520-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-22T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914399,
+    "folio": "F-5652-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-15T15:00:00.000Z",
+    "variacion": "T",
+    "valor": 2500
+  },
+  {
+    "id": 1771381914400,
+    "folio": "F-4121-7",
+    "vehiculoId": 7,
+    "nombreConductor": "Chofer Ejemplo 7",
+    "fechaEmision": "2026-02-18T02:31:54.372Z",
+    "fechaUso": "2026-02-08T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
   }
 ]

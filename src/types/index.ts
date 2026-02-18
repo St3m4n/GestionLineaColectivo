@@ -1,5 +1,6 @@
 export type RutaPrincipal = 'Troncal' | 'Variante 2';
 export type VariacionRuta = 'T' | 'L' | 'R' | 'Normal' | 'V2';
+export type UserRole = 'superadmin' | 'admin' | 'inspector';
 
 export interface Vehiculo {
   id: number; // Número de línea/cupo (1-250)
@@ -22,6 +23,8 @@ export interface Vehiculo {
     motivo: string;
     fecha: string; // ISO date de cuándo se levantó
   };
+  eliminado?: boolean;
+  fechaEliminacion?: string;
   historialConductores?: HistorialAsignacion[];
 }
 
@@ -49,6 +52,16 @@ export interface Conductor {
   motivoBloqueo?: string;
   historialVehiculos?: HistorialAsignacion[];
   agregadoPorInspector?: boolean; // Label para conductores registrados en terreno
+  eliminado?: boolean;
+  fechaEliminacion?: string;
+}
+
+export interface Controlador {
+  nombre: string;
+  rut: string;
+  telefono?: string;
+  email?: string;
+  observaciones?: string;
 }
 
 export interface AuditoriaAsignacion {
@@ -106,6 +119,8 @@ export interface PrintSettings {
   vehiculoId: PrintPosition;
   patente: PrintPosition;
   conductor: PrintPosition;
+  controladorNombre: PrintPosition;
+  controladorRut: PrintPosition;
   variacion: PrintPosition;
   valor: PrintPosition;
 }

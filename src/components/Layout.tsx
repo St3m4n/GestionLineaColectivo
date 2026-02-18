@@ -1,16 +1,22 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Search, Car, Users } from 'lucide-react';
+import { LayoutDashboard, Search, Car, Users, UserCheck } from 'lucide-react';
+import { useStore } from '../contexts/StateContext';
+import type { UserRole } from '../types';
 
 const Layout: React.FC = () => {
   const location = useLocation();
+  const { userRole, setUserRole } = useStore();
 
-  const menuItems = [
-    { path: '/inspector', label: 'Inspector', icon: Search },
-    { path: '/admin', label: 'Dashboard Admin', icon: LayoutDashboard },
-    { path: '/admin/vehiculos', label: 'Ficha Vehículos', icon: Car },
-    { path: '/admin/conductores', label: 'Ficha Conductores', icon: Users },
+  const menuItems: Array<{ path: string; label: string; icon: React.ElementType; roles: UserRole[] }> = [
+    { path: '/inspector', label: 'Inspector', icon: Search, roles: ['inspector', 'superadmin'] },
+    { path: '/admin', label: 'Dashboard Admin', icon: LayoutDashboard, roles: ['admin', 'superadmin'] },
+    { path: '/admin/vehiculos', label: 'Ficha Vehículos', icon: Car, roles: ['admin', 'superadmin'] },
+    { path: '/admin/conductores', label: 'Ficha Conductores', icon: Users, roles: ['admin', 'superadmin'] },
+    { path: '/admin/controladores', label: 'Ficha Controladores', icon: UserCheck, roles: ['admin', 'superadmin'] },
   ];
+
+  const visibleMenuItems = menuItems.filter(item => item.roles.includes(userRole));
 
   return (
     <div className="flex min-h-screen">
@@ -22,7 +28,7 @@ const Layout: React.FC = () => {
         </div>
         <nav className="flex-1 p-4">
           <ul className="space-y-2">
-            {menuItems.map((item) => {
+            {visibleMenuItems.map((item) => {
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
               return (
@@ -41,6 +47,21 @@ const Layout: React.FC = () => {
             })}
           </ul>
         </nav>
+        <div className="p-4 border-t border-slate-800">
+          <label htmlFor="user-role" className="block text-xs text-slate-400 mb-2">
+            Usuario actual
+          </label>
+          <select
+            id="user-role"
+            value={userRole}
+            onChange={(e) => setUserRole(e.target.value as UserRole)}
+            className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-2 text-sm"
+          >
+            <option value="superadmin">Superadmin</option>
+            <option value="admin">Admin</option>
+            <option value="inspector">Inspector</option>
+          </select>
+        </div>
       </aside>
 
       {/* Main Content */}

@@ -29,6 +29,16 @@
     "left": 250,
     "fontSize": 14
   },
+  "controladorNombre": {
+    "top": 240,
+    "left": 20,
+    "fontSize": 12
+  },
+  "controladorRut": {
+    "top": 260,
+    "left": 20,
+    "fontSize": 11
+  },
   "variacion": {
     "top": 155,
     "left": 160,

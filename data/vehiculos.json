@@ -7,13 +7,14 @@
     "anio": 2022,
     "vencimientoRevisionTecnica": "2026-05-20",
     "vencimientoSeguro": "2026-03-15",
-    "bloqueado": false,
+    "bloqueado": true,
     "rutaPrincipal": "Troncal",
     "variacionRuta": "L",
     "estadoCuenta": {
       "deudas": 0,
       "multas": 0
-    }
+    },
+    "motivoBloqueo": "Suspensión Administrativa"
   },
   {
     "id": 2,

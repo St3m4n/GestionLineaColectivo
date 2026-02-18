@@ -7,7 +7,7 @@ const InspectorView: React.FC = () => {
     vehiculos, conductores, venderTarjeta, getDynamicVariacion, 
     registrarMulta, multas, levantarBloqueoTemporal, 
     printSettings, tarjetas, diasNoHabiles, addConductor, updateConductor,
-    asignacionesR 
+    asignacionesR, controlador 
   } = useStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -68,6 +68,9 @@ const InspectorView: React.FC = () => {
   const foundVehiculo = vehiculos.find(v => v.id.toString() === debouncedSearch);
   const associatedConductor = foundVehiculo ? conductores.find(c => c.vehiculoId === foundVehiculo.id) : null;
   const currentVariacion = foundVehiculo ? getDynamicVariacion(foundVehiculo.id) : 'Normal';
+
+  const normalizeRut = (value: string) => value.replace(/\./g, '').replace(/-/g, '').trim().toUpperCase();
+  const existingConductorByRut = conductores.find(c => normalizeRut(c.rut) === normalizeRut(driverFormData.rut));
 
   const formatRouteDisplay = (v: any, variacion: string) => {
     if (variacion === 'R') return 'Variante 1';
@@ -160,17 +163,22 @@ const InspectorView: React.FC = () => {
 
   const handleDriverAssignment = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!foundVehiculo || !driverFormData.rut || !driverFormData.nombre) return;
+    if (!foundVehiculo || !driverFormData.rut) return;
 
-    const existing = conductores.find(c => c.rut === driverFormData.rut);
+    const existing = conductores.find(c => normalizeRut(c.rut) === normalizeRut(driverFormData.rut));
     if (existing) {
         updateConductor({
             ...existing,
-            nombre: driverFormData.nombre,
-            vencimientoLicencia: driverFormData.vencimientoLicencia || existing.vencimientoLicencia || '2099-01-01',
             vehiculoId: foundVehiculo.id
         }, 'inspector');
+      setShowDriverForm(false);
+      setMessage({ type: 'success', text: `Conductor existente (${existing.nombre}) reasignado al vehículo #${foundVehiculo.id}.` });
     } else {
+      if (!driverFormData.nombre) {
+        setMessage({ type: 'error', text: 'El RUT no existe. Debes ingresar al menos el nombre temporal del conductor.' });
+        return;
+      }
+
         addConductor({
             rut: driverFormData.rut,
             nombre: driverFormData.nombre,
@@ -178,10 +186,9 @@ const InspectorView: React.FC = () => {
             vehiculoId: foundVehiculo.id,
             bloqueado: false
         }, 'inspector');
+      setShowDriverForm(false);
+      setMessage({ type: 'warning', text: 'Conductor nuevo temporal registrado por inspector. Queda pendiente para validación en administración.' });
     }
-
-    setShowDriverForm(false);
-    setMessage({ type: 'success', text: 'Conductor asignado y registrado en auditoría.' });
   };
 
   // Lógica del mini-calendario
@@ -535,9 +542,9 @@ const InspectorView: React.FC = () => {
                 <button 
                   onClick={() => {
                     setDriverFormData({ 
-                      rut: associatedConductor?.rut || '', 
-                      nombre: associatedConductor?.nombre || '', 
-                      vencimientoLicencia: associatedConductor?.vencimientoLicencia || '' 
+                      rut: '', 
+                      nombre: '', 
+                      vencimientoLicencia: '' 
                     });
                     setShowDriverForm(true);
                   }}
@@ -594,33 +601,52 @@ const InspectorView: React.FC = () => {
                       onChange={e => setDriverFormData({...driverFormData, rut: e.target.value})}
                     />
                   </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Nombre Completo</label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ej: Juan Pérez"
-                      className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
-                      value={driverFormData.nombre}
-                      onChange={e => setDriverFormData({...driverFormData, nombre: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Vencimiento Licencia (Opcional)</label>
-                    <input
-                      type="date"
-                      className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
-                      value={driverFormData.vencimientoLicencia}
-                      onChange={e => setDriverFormData({...driverFormData, vencimientoLicencia: e.target.value})}
-                    />
-                  </div>
+
+                  {driverFormData.rut && existingConductorByRut && (
+                    <div className="p-3 rounded-lg border border-green-200 bg-green-50">
+                      <p className="text-[10px] font-black text-green-700 uppercase mb-1">Conductor Registrado</p>
+                      <p className="text-sm font-bold text-green-900">{existingConductorByRut.nombre}</p>
+                      <p className="text-xs font-mono text-green-700">{existingConductorByRut.rut}</p>
+                      <p className="text-[10px] text-green-700 mt-1">Se asignará directamente a este vehículo y quedará en auditoría.</p>
+                    </div>
+                  )}
+
+                  {driverFormData.rut && !existingConductorByRut && (
+                    <>
+                      <div className="p-3 rounded-lg border border-amber-200 bg-amber-50">
+                        <p className="text-[10px] font-black text-amber-700 uppercase">RUT no registrado</p>
+                        <p className="text-xs text-amber-800 mt-1">Ingresa datos temporales para permitir la venta. Administración podrá completar el perfil luego.</p>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Nombre Completo (Temporal)</label>
+                        <input
+                          type="text"
+                          required
+                          placeholder="Ej: Juan Pérez"
+                          className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
+                          value={driverFormData.nombre}
+                          onChange={e => setDriverFormData({...driverFormData, nombre: e.target.value})}
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-black text-slate-500 uppercase mb-1">Vencimiento Licencia (Temporal - Opcional)</label>
+                        <input
+                          type="date"
+                          className="w-full px-3 py-2 bg-slate-50 border-2 border-slate-200 rounded-lg focus:border-blue-500 outline-none text-sm"
+                          value={driverFormData.vencimientoLicencia}
+                          onChange={e => setDriverFormData({...driverFormData, vencimientoLicencia: e.target.value})}
+                        />
+                      </div>
+                    </>
+                  )}
                   
                   <button
                     type="submit"
                     className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white font-black py-3 rounded-xl hover:bg-blue-700 transition shadow-lg shadow-blue-200"
                   >
                     <Save size={18} />
-                    GUARDAR Y ASIGNAR
+                    {existingConductorByRut ? 'ASIGNAR CONDUCTOR REGISTRADO' : 'GUARDAR TEMPORAL Y ASIGNAR'}
                   </button>
                 </form>
               </div>
@@ -706,6 +732,22 @@ const InspectorView: React.FC = () => {
                       <div className="text-right field-group">
                         {/* El precio ha sido removido por requerimiento del usuario */}
                       </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-slate-200 footer-section relative min-h-[3.5em]">
+                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Controlador en Ruta</p>
+                      <p
+                        className="text-sm font-bold value-dynamic"
+                        style={{ position: 'absolute', top: `${printSettings.controladorNombre.top}px`, left: `${printSettings.controladorNombre.left}px`, fontSize: `${printSettings.controladorNombre.fontSize}px` }}
+                      >
+                        {controlador?.nombre || 'Controlador no asignado'}
+                      </p>
+                      <p
+                        className="text-xs font-mono value-dynamic"
+                        style={{ position: 'absolute', top: `${printSettings.controladorRut.top}px`, left: `${printSettings.controladorRut.left}px`, fontSize: `${printSettings.controladorRut.fontSize}px` }}
+                      >
+                        {controlador?.rut || '00.000.000-0'}
+                      </p>
                     </div>
                   </div>
                 ))}
