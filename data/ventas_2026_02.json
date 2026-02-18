@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1771379303528,
+    "folio": "F-5758-4",
+    "vehiculoId": 4,
+    "nombreConductor": "Chofer Ejemplo 4",
+    "fechaEmision": "2026-02-18T01:48:23.527Z",
+    "fechaUso": "2026-02-17T15:00:00.000Z",
+    "variacion": "R",
+    "valor": 2500
+  }
+]

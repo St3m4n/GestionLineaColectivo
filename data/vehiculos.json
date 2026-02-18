@@ -1,0 +1,2402 @@
+[
+  {
+    "id": 1,
+    "propietario": "Dueño Cupo #1",
+    "patente": "ZZ-XX-01",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 2,
+    "propietario": "Dueño Cupo #2",
+    "patente": "ZZ-XX-02",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 3,
+    "propietario": "Dueño Cupo #3",
+    "patente": "ZZ-XX-03",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 4,
+    "propietario": "Dueño Cupo #4",
+    "patente": "ZZ-XX-04",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 5,
+    "propietario": "Dueño Cupo #5",
+    "patente": "ZZ-XX-05",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 6,
+    "propietario": "Dueño Cupo #6",
+    "patente": "ZZ-XX-06",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 7,
+    "propietario": "Dueño Cupo #7",
+    "patente": "ZZ-XX-07",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 8,
+    "propietario": "Dueño Cupo #8",
+    "patente": "ZZ-XX-08",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 9,
+    "propietario": "Dueño Cupo #9",
+    "patente": "ZZ-XX-09",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 10,
+    "propietario": "Dueño Cupo #10",
+    "patente": "ZZ-XX-10",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 11,
+    "propietario": "Dueño Cupo #11",
+    "patente": "ZZ-XX-11",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 12,
+    "propietario": "Dueño Cupo #12",
+    "patente": "ZZ-XX-12",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 13,
+    "propietario": "Dueño Cupo #13",
+    "patente": "ZZ-XX-13",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 14,
+    "propietario": "Dueño Cupo #14",
+    "patente": "ZZ-XX-14",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 15,
+    "propietario": "Dueño Cupo #15",
+    "patente": "ZZ-XX-15",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 16,
+    "propietario": "Dueño Cupo #16",
+    "patente": "ZZ-XX-16",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 17,
+    "propietario": "Dueño Cupo #17",
+    "patente": "ZZ-XX-17",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 18,
+    "propietario": "Dueño Cupo #18",
+    "patente": "ZZ-XX-18",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 19,
+    "propietario": "Dueño Cupo #19",
+    "patente": "ZZ-XX-19",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 20,
+    "propietario": "Dueño Cupo #20",
+    "patente": "ZZ-XX-20",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 21,
+    "propietario": "Dueño Cupo #21",
+    "patente": "ZZ-XX-21",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 22,
+    "propietario": "Dueño Cupo #22",
+    "patente": "ZZ-XX-22",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 23,
+    "propietario": "Dueño Cupo #23",
+    "patente": "ZZ-XX-23",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 24,
+    "propietario": "Dueño Cupo #24",
+    "patente": "ZZ-XX-24",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 25,
+    "propietario": "Dueño Cupo #25",
+    "patente": "ZZ-XX-25",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 26,
+    "propietario": "Dueño Cupo #26",
+    "patente": "ZZ-XX-26",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 27,
+    "propietario": "Dueño Cupo #27",
+    "patente": "ZZ-XX-27",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 28,
+    "propietario": "Dueño Cupo #28",
+    "patente": "ZZ-XX-28",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 29,
+    "propietario": "Dueño Cupo #29",
+    "patente": "ZZ-XX-29",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 30,
+    "propietario": "Dueño Cupo #30",
+    "patente": "ZZ-XX-30",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 31,
+    "propietario": "Dueño Cupo #31",
+    "patente": "ZZ-XX-31",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 32,
+    "propietario": "Dueño Cupo #32",
+    "patente": "ZZ-XX-32",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 33,
+    "propietario": "Dueño Cupo #33",
+    "patente": "ZZ-XX-33",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 34,
+    "propietario": "Dueño Cupo #34",
+    "patente": "ZZ-XX-34",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 35,
+    "propietario": "Dueño Cupo #35",
+    "patente": "ZZ-XX-35",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 36,
+    "propietario": "Dueño Cupo #36",
+    "patente": "ZZ-XX-36",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 37,
+    "propietario": "Dueño Cupo #37",
+    "patente": "ZZ-XX-37",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 38,
+    "propietario": "Dueño Cupo #38",
+    "patente": "ZZ-XX-38",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 39,
+    "propietario": "Dueño Cupo #39",
+    "patente": "ZZ-XX-39",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 40,
+    "propietario": "Dueño Cupo #40",
+    "patente": "ZZ-XX-40",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 41,
+    "propietario": "Dueño Cupo #41",
+    "patente": "ZZ-XX-41",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 42,
+    "propietario": "Dueño Cupo #42",
+    "patente": "ZZ-XX-42",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 43,
+    "propietario": "Dueño Cupo #43",
+    "patente": "ZZ-XX-43",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 44,
+    "propietario": "Dueño Cupo #44",
+    "patente": "ZZ-XX-44",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 45,
+    "propietario": "Dueño Cupo #45",
+    "patente": "ZZ-XX-45",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 46,
+    "propietario": "Dueño Cupo #46",
+    "patente": "ZZ-XX-46",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 47,
+    "propietario": "Dueño Cupo #47",
+    "patente": "ZZ-XX-47",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 48,
+    "propietario": "Dueño Cupo #48",
+    "patente": "ZZ-XX-48",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 49,
+    "propietario": "Dueño Cupo #49",
+    "patente": "ZZ-XX-49",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 50,
+    "propietario": "Dueño Cupo #50",
+    "patente": "ZZ-XX-50",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 51,
+    "propietario": "Dueño Cupo #51",
+    "patente": "ZZ-XX-51",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 52,
+    "propietario": "Dueño Cupo #52",
+    "patente": "ZZ-XX-52",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 53,
+    "propietario": "Dueño Cupo #53",
+    "patente": "ZZ-XX-53",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 54,
+    "propietario": "Dueño Cupo #54",
+    "patente": "ZZ-XX-54",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 55,
+    "propietario": "Dueño Cupo #55",
+    "patente": "ZZ-XX-55",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 56,
+    "propietario": "Dueño Cupo #56",
+    "patente": "ZZ-XX-56",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 57,
+    "propietario": "Dueño Cupo #57",
+    "patente": "ZZ-XX-57",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 58,
+    "propietario": "Dueño Cupo #58",
+    "patente": "ZZ-XX-58",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 59,
+    "propietario": "Dueño Cupo #59",
+    "patente": "ZZ-XX-59",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 60,
+    "propietario": "Dueño Cupo #60",
+    "patente": "ZZ-XX-60",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 61,
+    "propietario": "Dueño Cupo #61",
+    "patente": "ZZ-XX-61",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 62,
+    "propietario": "Dueño Cupo #62",
+    "patente": "ZZ-XX-62",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 63,
+    "propietario": "Dueño Cupo #63",
+    "patente": "ZZ-XX-63",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 64,
+    "propietario": "Dueño Cupo #64",
+    "patente": "ZZ-XX-64",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 65,
+    "propietario": "Dueño Cupo #65",
+    "patente": "ZZ-XX-65",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 66,
+    "propietario": "Dueño Cupo #66",
+    "patente": "ZZ-XX-66",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 67,
+    "propietario": "Dueño Cupo #67",
+    "patente": "ZZ-XX-67",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 68,
+    "propietario": "Dueño Cupo #68",
+    "patente": "ZZ-XX-68",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 69,
+    "propietario": "Dueño Cupo #69",
+    "patente": "ZZ-XX-69",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 70,
+    "propietario": "Dueño Cupo #70",
+    "patente": "ZZ-XX-70",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 71,
+    "propietario": "Dueño Cupo #71",
+    "patente": "ZZ-XX-71",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 72,
+    "propietario": "Dueño Cupo #72",
+    "patente": "ZZ-XX-72",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 73,
+    "propietario": "Dueño Cupo #73",
+    "patente": "ZZ-XX-73",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 74,
+    "propietario": "Dueño Cupo #74",
+    "patente": "ZZ-XX-74",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 75,
+    "propietario": "Dueño Cupo #75",
+    "patente": "ZZ-XX-75",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Troncal",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 76,
+    "propietario": "Dueño Cupo #76",
+    "patente": "ZZ-XX-76",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 77,
+    "propietario": "Dueño Cupo #77",
+    "patente": "ZZ-XX-77",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 78,
+    "propietario": "Dueño Cupo #78",
+    "patente": "ZZ-XX-78",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 79,
+    "propietario": "Dueño Cupo #79",
+    "patente": "ZZ-XX-79",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 80,
+    "propietario": "Dueño Cupo #80",
+    "patente": "ZZ-XX-80",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 81,
+    "propietario": "Dueño Cupo #81",
+    "patente": "ZZ-XX-81",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 82,
+    "propietario": "Dueño Cupo #82",
+    "patente": "ZZ-XX-82",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 83,
+    "propietario": "Dueño Cupo #83",
+    "patente": "ZZ-XX-83",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 84,
+    "propietario": "Dueño Cupo #84",
+    "patente": "ZZ-XX-84",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 85,
+    "propietario": "Dueño Cupo #85",
+    "patente": "ZZ-XX-85",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 86,
+    "propietario": "Dueño Cupo #86",
+    "patente": "ZZ-XX-86",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 87,
+    "propietario": "Dueño Cupo #87",
+    "patente": "ZZ-XX-87",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 88,
+    "propietario": "Dueño Cupo #88",
+    "patente": "ZZ-XX-88",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 89,
+    "propietario": "Dueño Cupo #89",
+    "patente": "ZZ-XX-89",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 90,
+    "propietario": "Dueño Cupo #90",
+    "patente": "ZZ-XX-90",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 91,
+    "propietario": "Dueño Cupo #91",
+    "patente": "ZZ-XX-91",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 92,
+    "propietario": "Dueño Cupo #92",
+    "patente": "ZZ-XX-92",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 93,
+    "propietario": "Dueño Cupo #93",
+    "patente": "ZZ-XX-93",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 94,
+    "propietario": "Dueño Cupo #94",
+    "patente": "ZZ-XX-94",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 95,
+    "propietario": "Dueño Cupo #95",
+    "patente": "ZZ-XX-95",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 96,
+    "propietario": "Dueño Cupo #96",
+    "patente": "ZZ-XX-96",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 97,
+    "propietario": "Dueño Cupo #97",
+    "patente": "ZZ-XX-97",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 98,
+    "propietario": "Dueño Cupo #98",
+    "patente": "ZZ-XX-98",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 99,
+    "propietario": "Dueño Cupo #99",
+    "patente": "ZZ-XX-99",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 100,
+    "propietario": "Dueño Cupo #100",
+    "patente": "ZZ-XX-100",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 101,
+    "propietario": "Dueño Cupo #101",
+    "patente": "ZZ-XX-101",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 102,
+    "propietario": "Dueño Cupo #102",
+    "patente": "ZZ-XX-102",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 103,
+    "propietario": "Dueño Cupo #103",
+    "patente": "ZZ-XX-103",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 104,
+    "propietario": "Dueño Cupo #104",
+    "patente": "ZZ-XX-104",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 105,
+    "propietario": "Dueño Cupo #105",
+    "patente": "ZZ-XX-105",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 106,
+    "propietario": "Dueño Cupo #106",
+    "patente": "ZZ-XX-106",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 107,
+    "propietario": "Dueño Cupo #107",
+    "patente": "ZZ-XX-107",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 108,
+    "propietario": "Dueño Cupo #108",
+    "patente": "ZZ-XX-108",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 109,
+    "propietario": "Dueño Cupo #109",
+    "patente": "ZZ-XX-109",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 110,
+    "propietario": "Dueño Cupo #110",
+    "patente": "ZZ-XX-110",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 111,
+    "propietario": "Dueño Cupo #111",
+    "patente": "ZZ-XX-111",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 112,
+    "propietario": "Dueño Cupo #112",
+    "patente": "ZZ-XX-112",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 113,
+    "propietario": "Dueño Cupo #113",
+    "patente": "ZZ-XX-113",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 114,
+    "propietario": "Dueño Cupo #114",
+    "patente": "ZZ-XX-114",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 115,
+    "propietario": "Dueño Cupo #115",
+    "patente": "ZZ-XX-115",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 116,
+    "propietario": "Dueño Cupo #116",
+    "patente": "ZZ-XX-116",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 117,
+    "propietario": "Dueño Cupo #117",
+    "patente": "ZZ-XX-117",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 118,
+    "propietario": "Dueño Cupo #118",
+    "patente": "ZZ-XX-118",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 119,
+    "propietario": "Dueño Cupo #119",
+    "patente": "ZZ-XX-119",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 120,
+    "propietario": "Dueño Cupo #120",
+    "patente": "ZZ-XX-120",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 121,
+    "propietario": "Dueño Cupo #121",
+    "patente": "ZZ-XX-121",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 122,
+    "propietario": "Dueño Cupo #122",
+    "patente": "ZZ-XX-122",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 123,
+    "propietario": "Dueño Cupo #123",
+    "patente": "ZZ-XX-123",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 124,
+    "propietario": "Dueño Cupo #124",
+    "patente": "ZZ-XX-124",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 125,
+    "propietario": "Dueño Cupo #125",
+    "patente": "ZZ-XX-125",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 126,
+    "propietario": "Dueño Cupo #126",
+    "patente": "ZZ-XX-126",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 127,
+    "propietario": "Dueño Cupo #127",
+    "patente": "ZZ-XX-127",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 128,
+    "propietario": "Dueño Cupo #128",
+    "patente": "ZZ-XX-128",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 129,
+    "propietario": "Dueño Cupo #129",
+    "patente": "ZZ-XX-129",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 130,
+    "propietario": "Dueño Cupo #130",
+    "patente": "ZZ-XX-130",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 131,
+    "propietario": "Dueño Cupo #131",
+    "patente": "ZZ-XX-131",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 132,
+    "propietario": "Dueño Cupo #132",
+    "patente": "ZZ-XX-132",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 133,
+    "propietario": "Dueño Cupo #133",
+    "patente": "ZZ-XX-133",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 134,
+    "propietario": "Dueño Cupo #134",
+    "patente": "ZZ-XX-134",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 135,
+    "propietario": "Dueño Cupo #135",
+    "patente": "ZZ-XX-135",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 136,
+    "propietario": "Dueño Cupo #136",
+    "patente": "ZZ-XX-136",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 137,
+    "propietario": "Dueño Cupo #137",
+    "patente": "ZZ-XX-137",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 138,
+    "propietario": "Dueño Cupo #138",
+    "patente": "ZZ-XX-138",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 139,
+    "propietario": "Dueño Cupo #139",
+    "patente": "ZZ-XX-139",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 140,
+    "propietario": "Dueño Cupo #140",
+    "patente": "ZZ-XX-140",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 141,
+    "propietario": "Dueño Cupo #141",
+    "patente": "ZZ-XX-141",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 142,
+    "propietario": "Dueño Cupo #142",
+    "patente": "ZZ-XX-142",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 143,
+    "propietario": "Dueño Cupo #143",
+    "patente": "ZZ-XX-143",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 144,
+    "propietario": "Dueño Cupo #144",
+    "patente": "ZZ-XX-144",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 145,
+    "propietario": "Dueño Cupo #145",
+    "patente": "ZZ-XX-145",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 146,
+    "propietario": "Dueño Cupo #146",
+    "patente": "ZZ-XX-146",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 147,
+    "propietario": "Dueño Cupo #147",
+    "patente": "ZZ-XX-147",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 148,
+    "propietario": "Dueño Cupo #148",
+    "patente": "ZZ-XX-148",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 149,
+    "propietario": "Dueño Cupo #149",
+    "patente": "ZZ-XX-149",
+    "modelo": "Hyundai Accent",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  },
+  {
+    "id": 150,
+    "propietario": "Dueño Cupo #150",
+    "patente": "ZZ-XX-150",
+    "modelo": "Toyota Yaris",
+    "anio": 2022,
+    "vencimientoRevisionTecnica": "2026-05-20",
+    "vencimientoSeguro": "2026-03-15",
+    "bloqueado": false,
+    "rutaPrincipal": "Variante 2",
+    "variacionRuta": "L",
+    "estadoCuenta": {
+      "deudas": 0,
+      "multas": 0
+    }
+  }
+]

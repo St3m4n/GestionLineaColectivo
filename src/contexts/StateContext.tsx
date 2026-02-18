@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import type { 
   Vehiculo, Conductor, TarjetaRuta, Multa, VariacionRuta,
   AuditoriaDesbloqueo, PrintSettings, AuditoriaAsignacion 
@@ -17,7 +17,7 @@ interface StateContextType {
   addConductor: (c: Conductor, realizadoPor?: 'administrador' | 'inspector') => void;
   updateConductor: (c: Conductor, realizadoPor?: 'administrador' | 'inspector') => void;
   removeConductor: (rut: string) => void;
-  venderTarjeta: (vehiculoId: number, fechasUso?: string[]) => { success: boolean; message: string; cards?: TarjetaRuta[] };
+  venderTarjeta: (vehiculoId: number, fechasUso?: string[]) => Promise<{ success: boolean; message: string; cards?: TarjetaRuta[] }>;
   getMonthlyBalance: (vehiculoId: number) => number;
   getDynamicVariacion: (vehiculoId: number, baseDate?: Date) => VariacionRuta;
   registrarPago: (vehiculoId: number, monto: number, tipo: 'deuda' | 'multa') => void;
@@ -31,7 +31,7 @@ interface StateContextType {
   diasNoHabiles: string[];
   toggleDiaNoHabil: (fecha: string) => void;
   asignacionesR: Record<string, number[]>;
-  updateAsignacionesR: (fecha: string, vehiculosIds: number[]) => void;
+  updateAsignacionesR: (fecha: string, vehiculosIds: number[] | null) => void;
   batchUpdateAsignacionesR: (data: Record<string, number[]>) => void;
 }
 
@@ -79,6 +79,20 @@ const INITIAL_CONDUCTORES: Conductor[] = Array.from({ length: 150 }, (_, i) => {
     ]
   };
 });
+
+const API_BASE = '/api';
+
+type BackendState = {
+  vehiculos: Vehiculo[];
+  conductores: Conductor[];
+  tarjetas: TarjetaRuta[];
+  multas: Multa[];
+  auditoriaDesbloqueos: AuditoriaDesbloqueo[];
+  auditoriaAsignaciones: AuditoriaAsignacion[];
+  printSettings: PrintSettings;
+  diasNoHabiles: string[];
+  asignacionesR: Record<string, number[]>;
+};
 
 export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [vehiculos, setVehiculos] = useState<Vehiculo[]>(() => {
@@ -208,6 +222,79 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       ...data
     }));
   };
+
+  const hydratedFromBackend = useRef(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadFromBackend = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/state`);
+        if (!response.ok) return;
+
+        const data = (await response.json()) as BackendState;
+        if (!mounted || !data) return;
+
+        if (Array.isArray(data.vehiculos) && data.vehiculos.length > 0) setVehiculos(data.vehiculos);
+        if (Array.isArray(data.conductores) && data.conductores.length > 0) setConductores(data.conductores);
+        if (Array.isArray(data.tarjetas)) setTarjetas(data.tarjetas);
+        if (Array.isArray(data.multas)) setMultas(data.multas);
+        if (Array.isArray(data.auditoriaDesbloqueos)) setAuditoriaDesbloqueos(data.auditoriaDesbloqueos);
+        if (Array.isArray(data.auditoriaAsignaciones)) setAuditoriaAsignaciones(data.auditoriaAsignaciones);
+        if (data.printSettings) setPrintSettings(data.printSettings);
+        if (Array.isArray(data.diasNoHabiles)) setDiasNoHabiles(data.diasNoHabiles);
+        if (data.asignacionesR && typeof data.asignacionesR === 'object') setAsignacionesR(data.asignacionesR);
+      } catch {
+        // fallback localStorage/estado local
+      } finally {
+        hydratedFromBackend.current = true;
+      }
+    };
+
+    void loadFromBackend();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedFromBackend.current) return;
+
+    const timer = setTimeout(() => {
+      const payload: BackendState = {
+        vehiculos,
+        conductores,
+        tarjetas,
+        multas,
+        auditoriaDesbloqueos,
+        auditoriaAsignaciones,
+        printSettings,
+        diasNoHabiles,
+        asignacionesR,
+      };
+
+      void fetch(`${API_BASE}/state`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      }).catch(() => {
+        // mantener funcionamiento local si backend falla
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [
+    vehiculos,
+    conductores,
+    tarjetas,
+    multas,
+    auditoriaDesbloqueos,
+    auditoriaAsignaciones,
+    printSettings,
+    diasNoHabiles,
+    asignacionesR,
+  ]);
 
   useEffect(() => {
     localStorage.setItem('vehiculos', JSON.stringify(vehiculos));
@@ -379,82 +466,48 @@ export const StateProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setConductores(prev => prev.filter(c => c.rut !== rut));
   };
 
-  const venderTarjeta = (vehiculoId: number, fechasUso?: string[]) => {
-    const vehiculo = vehiculos.find(v => v.id === vehiculoId);
-    if (!vehiculo) return { success: false, message: 'Vehículo no encontrado' };
+  const venderTarjeta = async (vehiculoId: number, fechasUso?: string[]) => {
+    try {
+      const response = await fetch(`${API_BASE}/ventas/tarjeta`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ vehiculoId, fechasUso }),
+      });
 
-    const conductor = conductores.find(c => c.vehiculoId === vehiculoId);
-    if (!conductor) return { success: false, message: 'No hay conductor asociado a este vehículo' };
+      const result = await response.json();
+      if (!response.ok || !result?.success) {
+        return { success: false, message: result?.message || result?.error || 'No se pudo emitir la tarjeta.' };
+      }
 
-    // Validar Bloqueos
-    if ((vehiculo.bloqueado || conductor.bloqueado) && !vehiculo.desbloqueoTemporal?.activo) {
-      return { success: false, message: 'Venta bloqueada por administración.' };
-    }
+      const nuevasTarjetas = ((result.cards || []) as any[]).map((card) => ({
+        ...card,
+        valor: card.valor ?? card.monto ?? 2500,
+      })) as TarjetaRuta[];
 
-    // Validar Licencia Vencida
-    const hoy = new Date();
-    hoy.setHours(0, 0, 0, 0);
-    const fechaLicencia = new Date(conductor.vencimientoLicencia + 'T12:00:00');
-    if (fechaLicencia < hoy && !vehiculo.desbloqueoTemporal?.activo) {
-      return { success: false, message: `Bloqueado: Licencia del conductor (${conductor.nombre}) venció el ${conductor.vencimientoLicencia}.` };
-    }
+      setTarjetas(prev => [...prev, ...nuevasTarjetas]);
 
-    const multasVencidas = multas.filter(m => 
-      m.vehiculoId === vehiculoId && !m.pagada && m.fechaVencimiento && new Date(m.fechaVencimiento) < new Date()
-    );
-
-    if (multasVencidas.length > 0 && !vehiculo.desbloqueoTemporal?.activo) {
-      return { success: false, message: `Bloqueado por ${multasVencidas.length} multas vencidas.` };
-    }
-
-    // Si no se pasan fechas, se asume el día de hoy (comportamiento anterior si no se actualiza el componente)
-    const todayStr = `${hoy.getFullYear()}-${String(hoy.getMonth() + 1).padStart(2, '0')}-${String(hoy.getDate()).padStart(2, '0')}`;
-    const targetDates = fechasUso || [todayStr];
-    
-    // Evitar duplicados para seguridad aunque el front lo prevenga
-    const alreadySold = targetDates.some(d => 
-      tarjetas.some(t => t.vehiculoId === vehiculoId && t.fechaUso?.split('T')[0] === d)
-    );
-
-    if (alreadySold) return { success: false, message: 'Una o más fechas ya tienen una tarjeta emitida.' };
-
-    const nuevasTarjetas: TarjetaRuta[] = targetDates.map((dateStr, i) => {
-      const fechaUsoDate = new Date(dateStr + 'T12:00:00'); // Usar mediodía para evitar desfases de zona horaria
-      const variacionParaEseDia = getDynamicVariacion(vehiculoId, fechaUsoDate);
+      const totalVenta = 2500 * nuevasTarjetas.length;
+      setVehiculos(prev => prev.map(v =>
+        v.id === vehiculoId
+          ? {
+              ...v,
+              estadoCuenta: {
+                ...v.estadoCuenta,
+                deudas: Math.max(0, v.estadoCuenta.deudas - totalVenta)
+              },
+              desbloqueoTemporal: undefined
+            }
+          : v
+      ));
 
       return {
-        id: Date.now() + i,
-        folio: `F-${Math.floor(1000 + Math.random() * 9000)}-${vehiculoId}`,
-        vehiculoId,
-        nombreConductor: conductor.nombre,
-        fechaEmision: new Date().toISOString(),
-        fechaUso: fechaUsoDate.toISOString(),
-        variacion: variacionParaEseDia,
-        valor: 2500
+        success: true,
+        message: result.message || `${nuevasTarjetas.length} tarjeta(s) vendida(s) con éxito.`,
+        cards: nuevasTarjetas,
       };
-    });
-
-    setTarjetas(prev => [...prev, ...nuevasTarjetas]);
-    
-    const totalVenta = 2500 * targetDates.length;
-    setVehiculos(prev => prev.map(v => 
-      v.id === vehiculoId 
-        ? { 
-            ...v, 
-            estadoCuenta: { 
-              ...v.estadoCuenta, 
-              deudas: Math.max(0, v.estadoCuenta.deudas - totalVenta) 
-            },
-            desbloqueoTemporal: undefined 
-          } 
-        : v
-    ));
-
-    return { 
-      success: true, 
-      message: `${targetDates.length} tarjeta(s) vendida(s) con éxito.`,
-      cards: nuevasTarjetas 
-    };
+    } catch {
+      return { success: false, message: 'Error de conexión con el servidor.' };
+    }
   };
 
   const getMonthlyBalance = (vehiculoId: number) => {

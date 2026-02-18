@@ -1,0 +1,2252 @@
+[
+  {
+    "rut": "10.111.111-1",
+    "nombre": "Chofer Ejemplo 1",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 1,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h1",
+        "vehiculoId": 1,
+        "conductorRut": "10.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.222.222-2",
+    "nombre": "Chofer Ejemplo 2",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 2,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h2",
+        "vehiculoId": 2,
+        "conductorRut": "10.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.333.333-3",
+    "nombre": "Chofer Ejemplo 3",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 3,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h3",
+        "vehiculoId": 3,
+        "conductorRut": "10.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.444.444-4",
+    "nombre": "Chofer Ejemplo 4",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 4,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h4",
+        "vehiculoId": 4,
+        "conductorRut": "10.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.555.555-5",
+    "nombre": "Chofer Ejemplo 5",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 5,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h5",
+        "vehiculoId": 5,
+        "conductorRut": "10.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.666.666-6",
+    "nombre": "Chofer Ejemplo 6",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 6,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h6",
+        "vehiculoId": 6,
+        "conductorRut": "10.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.777.777-7",
+    "nombre": "Chofer Ejemplo 7",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 7,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h7",
+        "vehiculoId": 7,
+        "conductorRut": "10.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.888.888-8",
+    "nombre": "Chofer Ejemplo 8",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 8,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h8",
+        "vehiculoId": 8,
+        "conductorRut": "10.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "10.999.999-9",
+    "nombre": "Chofer Ejemplo 9",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 9,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h9",
+        "vehiculoId": 9,
+        "conductorRut": "10.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.000.000-0",
+    "nombre": "Chofer Ejemplo 10",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 10,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h10",
+        "vehiculoId": 10,
+        "conductorRut": "11.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.111.111-1",
+    "nombre": "Chofer Ejemplo 11",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 11,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h11",
+        "vehiculoId": 11,
+        "conductorRut": "11.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.222.222-2",
+    "nombre": "Chofer Ejemplo 12",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 12,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h12",
+        "vehiculoId": 12,
+        "conductorRut": "11.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.333.333-3",
+    "nombre": "Chofer Ejemplo 13",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 13,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h13",
+        "vehiculoId": 13,
+        "conductorRut": "11.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.444.444-4",
+    "nombre": "Chofer Ejemplo 14",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 14,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h14",
+        "vehiculoId": 14,
+        "conductorRut": "11.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.555.555-5",
+    "nombre": "Chofer Ejemplo 15",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 15,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h15",
+        "vehiculoId": 15,
+        "conductorRut": "11.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.666.666-6",
+    "nombre": "Chofer Ejemplo 16",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 16,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h16",
+        "vehiculoId": 16,
+        "conductorRut": "11.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.777.777-7",
+    "nombre": "Chofer Ejemplo 17",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 17,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h17",
+        "vehiculoId": 17,
+        "conductorRut": "11.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.888.888-8",
+    "nombre": "Chofer Ejemplo 18",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 18,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h18",
+        "vehiculoId": 18,
+        "conductorRut": "11.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "11.999.999-9",
+    "nombre": "Chofer Ejemplo 19",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 19,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h19",
+        "vehiculoId": 19,
+        "conductorRut": "11.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.000.000-0",
+    "nombre": "Chofer Ejemplo 20",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 20,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h20",
+        "vehiculoId": 20,
+        "conductorRut": "12.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.111.111-1",
+    "nombre": "Chofer Ejemplo 21",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 21,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h21",
+        "vehiculoId": 21,
+        "conductorRut": "12.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.222.222-2",
+    "nombre": "Chofer Ejemplo 22",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 22,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h22",
+        "vehiculoId": 22,
+        "conductorRut": "12.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.333.333-3",
+    "nombre": "Chofer Ejemplo 23",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 23,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h23",
+        "vehiculoId": 23,
+        "conductorRut": "12.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.444.444-4",
+    "nombre": "Chofer Ejemplo 24",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 24,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h24",
+        "vehiculoId": 24,
+        "conductorRut": "12.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.555.555-5",
+    "nombre": "Chofer Ejemplo 25",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 25,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h25",
+        "vehiculoId": 25,
+        "conductorRut": "12.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.666.666-6",
+    "nombre": "Chofer Ejemplo 26",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 26,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h26",
+        "vehiculoId": 26,
+        "conductorRut": "12.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.777.777-7",
+    "nombre": "Chofer Ejemplo 27",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 27,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h27",
+        "vehiculoId": 27,
+        "conductorRut": "12.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.888.888-8",
+    "nombre": "Chofer Ejemplo 28",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 28,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h28",
+        "vehiculoId": 28,
+        "conductorRut": "12.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "12.999.999-9",
+    "nombre": "Chofer Ejemplo 29",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 29,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h29",
+        "vehiculoId": 29,
+        "conductorRut": "12.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.000.000-0",
+    "nombre": "Chofer Ejemplo 30",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 30,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h30",
+        "vehiculoId": 30,
+        "conductorRut": "13.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.111.111-1",
+    "nombre": "Chofer Ejemplo 31",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 31,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h31",
+        "vehiculoId": 31,
+        "conductorRut": "13.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.222.222-2",
+    "nombre": "Chofer Ejemplo 32",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 32,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h32",
+        "vehiculoId": 32,
+        "conductorRut": "13.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.333.333-3",
+    "nombre": "Chofer Ejemplo 33",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 33,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h33",
+        "vehiculoId": 33,
+        "conductorRut": "13.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.444.444-4",
+    "nombre": "Chofer Ejemplo 34",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 34,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h34",
+        "vehiculoId": 34,
+        "conductorRut": "13.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.555.555-5",
+    "nombre": "Chofer Ejemplo 35",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 35,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h35",
+        "vehiculoId": 35,
+        "conductorRut": "13.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.666.666-6",
+    "nombre": "Chofer Ejemplo 36",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 36,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h36",
+        "vehiculoId": 36,
+        "conductorRut": "13.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.777.777-7",
+    "nombre": "Chofer Ejemplo 37",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 37,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h37",
+        "vehiculoId": 37,
+        "conductorRut": "13.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.888.888-8",
+    "nombre": "Chofer Ejemplo 38",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 38,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h38",
+        "vehiculoId": 38,
+        "conductorRut": "13.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "13.999.999-9",
+    "nombre": "Chofer Ejemplo 39",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 39,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h39",
+        "vehiculoId": 39,
+        "conductorRut": "13.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.000.000-0",
+    "nombre": "Chofer Ejemplo 40",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 40,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h40",
+        "vehiculoId": 40,
+        "conductorRut": "14.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.111.111-1",
+    "nombre": "Chofer Ejemplo 41",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 41,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h41",
+        "vehiculoId": 41,
+        "conductorRut": "14.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.222.222-2",
+    "nombre": "Chofer Ejemplo 42",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 42,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h42",
+        "vehiculoId": 42,
+        "conductorRut": "14.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.333.333-3",
+    "nombre": "Chofer Ejemplo 43",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 43,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h43",
+        "vehiculoId": 43,
+        "conductorRut": "14.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.444.444-4",
+    "nombre": "Chofer Ejemplo 44",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 44,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h44",
+        "vehiculoId": 44,
+        "conductorRut": "14.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.555.555-5",
+    "nombre": "Chofer Ejemplo 45",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 45,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h45",
+        "vehiculoId": 45,
+        "conductorRut": "14.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.666.666-6",
+    "nombre": "Chofer Ejemplo 46",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 46,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h46",
+        "vehiculoId": 46,
+        "conductorRut": "14.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.777.777-7",
+    "nombre": "Chofer Ejemplo 47",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 47,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h47",
+        "vehiculoId": 47,
+        "conductorRut": "14.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.888.888-8",
+    "nombre": "Chofer Ejemplo 48",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 48,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h48",
+        "vehiculoId": 48,
+        "conductorRut": "14.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "14.999.999-9",
+    "nombre": "Chofer Ejemplo 49",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 49,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h49",
+        "vehiculoId": 49,
+        "conductorRut": "14.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.000.000-0",
+    "nombre": "Chofer Ejemplo 50",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 50,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h50",
+        "vehiculoId": 50,
+        "conductorRut": "15.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.111.111-1",
+    "nombre": "Chofer Ejemplo 51",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 51,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h51",
+        "vehiculoId": 51,
+        "conductorRut": "15.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.222.222-2",
+    "nombre": "Chofer Ejemplo 52",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 52,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h52",
+        "vehiculoId": 52,
+        "conductorRut": "15.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.333.333-3",
+    "nombre": "Chofer Ejemplo 53",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 53,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h53",
+        "vehiculoId": 53,
+        "conductorRut": "15.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.444.444-4",
+    "nombre": "Chofer Ejemplo 54",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 54,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h54",
+        "vehiculoId": 54,
+        "conductorRut": "15.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.555.555-5",
+    "nombre": "Chofer Ejemplo 55",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 55,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h55",
+        "vehiculoId": 55,
+        "conductorRut": "15.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.666.666-6",
+    "nombre": "Chofer Ejemplo 56",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 56,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h56",
+        "vehiculoId": 56,
+        "conductorRut": "15.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.777.777-7",
+    "nombre": "Chofer Ejemplo 57",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 57,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h57",
+        "vehiculoId": 57,
+        "conductorRut": "15.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.888.888-8",
+    "nombre": "Chofer Ejemplo 58",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 58,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h58",
+        "vehiculoId": 58,
+        "conductorRut": "15.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "15.999.999-9",
+    "nombre": "Chofer Ejemplo 59",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 59,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h59",
+        "vehiculoId": 59,
+        "conductorRut": "15.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.000.000-0",
+    "nombre": "Chofer Ejemplo 60",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 60,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h60",
+        "vehiculoId": 60,
+        "conductorRut": "16.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.111.111-1",
+    "nombre": "Chofer Ejemplo 61",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 61,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h61",
+        "vehiculoId": 61,
+        "conductorRut": "16.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.222.222-2",
+    "nombre": "Chofer Ejemplo 62",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 62,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h62",
+        "vehiculoId": 62,
+        "conductorRut": "16.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.333.333-3",
+    "nombre": "Chofer Ejemplo 63",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 63,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h63",
+        "vehiculoId": 63,
+        "conductorRut": "16.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.444.444-4",
+    "nombre": "Chofer Ejemplo 64",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 64,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h64",
+        "vehiculoId": 64,
+        "conductorRut": "16.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.555.555-5",
+    "nombre": "Chofer Ejemplo 65",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 65,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h65",
+        "vehiculoId": 65,
+        "conductorRut": "16.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.666.666-6",
+    "nombre": "Chofer Ejemplo 66",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 66,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h66",
+        "vehiculoId": 66,
+        "conductorRut": "16.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.777.777-7",
+    "nombre": "Chofer Ejemplo 67",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 67,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h67",
+        "vehiculoId": 67,
+        "conductorRut": "16.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.888.888-8",
+    "nombre": "Chofer Ejemplo 68",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 68,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h68",
+        "vehiculoId": 68,
+        "conductorRut": "16.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "16.999.999-9",
+    "nombre": "Chofer Ejemplo 69",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 69,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h69",
+        "vehiculoId": 69,
+        "conductorRut": "16.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.000.000-0",
+    "nombre": "Chofer Ejemplo 70",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 70,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h70",
+        "vehiculoId": 70,
+        "conductorRut": "17.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.111.111-1",
+    "nombre": "Chofer Ejemplo 71",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 71,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h71",
+        "vehiculoId": 71,
+        "conductorRut": "17.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.222.222-2",
+    "nombre": "Chofer Ejemplo 72",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 72,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h72",
+        "vehiculoId": 72,
+        "conductorRut": "17.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.333.333-3",
+    "nombre": "Chofer Ejemplo 73",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 73,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h73",
+        "vehiculoId": 73,
+        "conductorRut": "17.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.444.444-4",
+    "nombre": "Chofer Ejemplo 74",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 74,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h74",
+        "vehiculoId": 74,
+        "conductorRut": "17.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.555.555-5",
+    "nombre": "Chofer Ejemplo 75",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 75,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h75",
+        "vehiculoId": 75,
+        "conductorRut": "17.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.666.666-6",
+    "nombre": "Chofer Ejemplo 76",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 76,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h76",
+        "vehiculoId": 76,
+        "conductorRut": "17.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.777.777-7",
+    "nombre": "Chofer Ejemplo 77",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 77,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h77",
+        "vehiculoId": 77,
+        "conductorRut": "17.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.888.888-8",
+    "nombre": "Chofer Ejemplo 78",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 78,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h78",
+        "vehiculoId": 78,
+        "conductorRut": "17.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "17.999.999-9",
+    "nombre": "Chofer Ejemplo 79",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 79,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h79",
+        "vehiculoId": 79,
+        "conductorRut": "17.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.000.000-0",
+    "nombre": "Chofer Ejemplo 80",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 80,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h80",
+        "vehiculoId": 80,
+        "conductorRut": "18.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.111.111-1",
+    "nombre": "Chofer Ejemplo 81",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 81,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h81",
+        "vehiculoId": 81,
+        "conductorRut": "18.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.222.222-2",
+    "nombre": "Chofer Ejemplo 82",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 82,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h82",
+        "vehiculoId": 82,
+        "conductorRut": "18.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.333.333-3",
+    "nombre": "Chofer Ejemplo 83",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 83,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h83",
+        "vehiculoId": 83,
+        "conductorRut": "18.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.444.444-4",
+    "nombre": "Chofer Ejemplo 84",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 84,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h84",
+        "vehiculoId": 84,
+        "conductorRut": "18.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.555.555-5",
+    "nombre": "Chofer Ejemplo 85",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 85,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h85",
+        "vehiculoId": 85,
+        "conductorRut": "18.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.666.666-6",
+    "nombre": "Chofer Ejemplo 86",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 86,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h86",
+        "vehiculoId": 86,
+        "conductorRut": "18.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.777.777-7",
+    "nombre": "Chofer Ejemplo 87",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 87,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h87",
+        "vehiculoId": 87,
+        "conductorRut": "18.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.888.888-8",
+    "nombre": "Chofer Ejemplo 88",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 88,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h88",
+        "vehiculoId": 88,
+        "conductorRut": "18.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "18.999.999-9",
+    "nombre": "Chofer Ejemplo 89",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 89,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h89",
+        "vehiculoId": 89,
+        "conductorRut": "18.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.000.000-0",
+    "nombre": "Chofer Ejemplo 90",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 90,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h90",
+        "vehiculoId": 90,
+        "conductorRut": "19.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.111.111-1",
+    "nombre": "Chofer Ejemplo 91",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 91,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h91",
+        "vehiculoId": 91,
+        "conductorRut": "19.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.222.222-2",
+    "nombre": "Chofer Ejemplo 92",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 92,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h92",
+        "vehiculoId": 92,
+        "conductorRut": "19.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.333.333-3",
+    "nombre": "Chofer Ejemplo 93",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 93,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h93",
+        "vehiculoId": 93,
+        "conductorRut": "19.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.444.444-4",
+    "nombre": "Chofer Ejemplo 94",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 94,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h94",
+        "vehiculoId": 94,
+        "conductorRut": "19.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.555.555-5",
+    "nombre": "Chofer Ejemplo 95",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 95,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h95",
+        "vehiculoId": 95,
+        "conductorRut": "19.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.666.666-6",
+    "nombre": "Chofer Ejemplo 96",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 96,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h96",
+        "vehiculoId": 96,
+        "conductorRut": "19.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.777.777-7",
+    "nombre": "Chofer Ejemplo 97",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 97,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h97",
+        "vehiculoId": 97,
+        "conductorRut": "19.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.888.888-8",
+    "nombre": "Chofer Ejemplo 98",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 98,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h98",
+        "vehiculoId": 98,
+        "conductorRut": "19.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "19.999.999-9",
+    "nombre": "Chofer Ejemplo 99",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 99,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h99",
+        "vehiculoId": 99,
+        "conductorRut": "19.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.000.000-0",
+    "nombre": "Chofer Ejemplo 100",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 100,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h100",
+        "vehiculoId": 100,
+        "conductorRut": "20.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.111.111-1",
+    "nombre": "Chofer Ejemplo 101",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 101,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h101",
+        "vehiculoId": 101,
+        "conductorRut": "20.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.222.222-2",
+    "nombre": "Chofer Ejemplo 102",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 102,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h102",
+        "vehiculoId": 102,
+        "conductorRut": "20.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.333.333-3",
+    "nombre": "Chofer Ejemplo 103",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 103,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h103",
+        "vehiculoId": 103,
+        "conductorRut": "20.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.444.444-4",
+    "nombre": "Chofer Ejemplo 104",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 104,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h104",
+        "vehiculoId": 104,
+        "conductorRut": "20.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.555.555-5",
+    "nombre": "Chofer Ejemplo 105",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 105,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h105",
+        "vehiculoId": 105,
+        "conductorRut": "20.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.666.666-6",
+    "nombre": "Chofer Ejemplo 106",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 106,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h106",
+        "vehiculoId": 106,
+        "conductorRut": "20.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.777.777-7",
+    "nombre": "Chofer Ejemplo 107",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 107,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h107",
+        "vehiculoId": 107,
+        "conductorRut": "20.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.888.888-8",
+    "nombre": "Chofer Ejemplo 108",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 108,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h108",
+        "vehiculoId": 108,
+        "conductorRut": "20.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "20.999.999-9",
+    "nombre": "Chofer Ejemplo 109",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 109,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h109",
+        "vehiculoId": 109,
+        "conductorRut": "20.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.000.000-0",
+    "nombre": "Chofer Ejemplo 110",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 110,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h110",
+        "vehiculoId": 110,
+        "conductorRut": "21.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.111.111-1",
+    "nombre": "Chofer Ejemplo 111",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 111,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h111",
+        "vehiculoId": 111,
+        "conductorRut": "21.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.222.222-2",
+    "nombre": "Chofer Ejemplo 112",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 112,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h112",
+        "vehiculoId": 112,
+        "conductorRut": "21.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.333.333-3",
+    "nombre": "Chofer Ejemplo 113",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 113,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h113",
+        "vehiculoId": 113,
+        "conductorRut": "21.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.444.444-4",
+    "nombre": "Chofer Ejemplo 114",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 114,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h114",
+        "vehiculoId": 114,
+        "conductorRut": "21.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.555.555-5",
+    "nombre": "Chofer Ejemplo 115",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 115,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h115",
+        "vehiculoId": 115,
+        "conductorRut": "21.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.666.666-6",
+    "nombre": "Chofer Ejemplo 116",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 116,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h116",
+        "vehiculoId": 116,
+        "conductorRut": "21.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.777.777-7",
+    "nombre": "Chofer Ejemplo 117",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 117,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h117",
+        "vehiculoId": 117,
+        "conductorRut": "21.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.888.888-8",
+    "nombre": "Chofer Ejemplo 118",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 118,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h118",
+        "vehiculoId": 118,
+        "conductorRut": "21.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "21.999.999-9",
+    "nombre": "Chofer Ejemplo 119",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 119,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h119",
+        "vehiculoId": 119,
+        "conductorRut": "21.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.000.000-0",
+    "nombre": "Chofer Ejemplo 120",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 120,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h120",
+        "vehiculoId": 120,
+        "conductorRut": "22.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.111.111-1",
+    "nombre": "Chofer Ejemplo 121",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 121,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h121",
+        "vehiculoId": 121,
+        "conductorRut": "22.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.222.222-2",
+    "nombre": "Chofer Ejemplo 122",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 122,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h122",
+        "vehiculoId": 122,
+        "conductorRut": "22.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.333.333-3",
+    "nombre": "Chofer Ejemplo 123",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 123,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h123",
+        "vehiculoId": 123,
+        "conductorRut": "22.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.444.444-4",
+    "nombre": "Chofer Ejemplo 124",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 124,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h124",
+        "vehiculoId": 124,
+        "conductorRut": "22.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.555.555-5",
+    "nombre": "Chofer Ejemplo 125",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 125,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h125",
+        "vehiculoId": 125,
+        "conductorRut": "22.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.666.666-6",
+    "nombre": "Chofer Ejemplo 126",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 126,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h126",
+        "vehiculoId": 126,
+        "conductorRut": "22.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.777.777-7",
+    "nombre": "Chofer Ejemplo 127",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 127,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h127",
+        "vehiculoId": 127,
+        "conductorRut": "22.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.888.888-8",
+    "nombre": "Chofer Ejemplo 128",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 128,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h128",
+        "vehiculoId": 128,
+        "conductorRut": "22.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "22.999.999-9",
+    "nombre": "Chofer Ejemplo 129",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 129,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h129",
+        "vehiculoId": 129,
+        "conductorRut": "22.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.000.000-0",
+    "nombre": "Chofer Ejemplo 130",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 130,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h130",
+        "vehiculoId": 130,
+        "conductorRut": "23.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.111.111-1",
+    "nombre": "Chofer Ejemplo 131",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 131,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h131",
+        "vehiculoId": 131,
+        "conductorRut": "23.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.222.222-2",
+    "nombre": "Chofer Ejemplo 132",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 132,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h132",
+        "vehiculoId": 132,
+        "conductorRut": "23.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.333.333-3",
+    "nombre": "Chofer Ejemplo 133",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 133,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h133",
+        "vehiculoId": 133,
+        "conductorRut": "23.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.444.444-4",
+    "nombre": "Chofer Ejemplo 134",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 134,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h134",
+        "vehiculoId": 134,
+        "conductorRut": "23.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.555.555-5",
+    "nombre": "Chofer Ejemplo 135",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 135,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h135",
+        "vehiculoId": 135,
+        "conductorRut": "23.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.666.666-6",
+    "nombre": "Chofer Ejemplo 136",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 136,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h136",
+        "vehiculoId": 136,
+        "conductorRut": "23.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.777.777-7",
+    "nombre": "Chofer Ejemplo 137",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 137,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h137",
+        "vehiculoId": 137,
+        "conductorRut": "23.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.888.888-8",
+    "nombre": "Chofer Ejemplo 138",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 138,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h138",
+        "vehiculoId": 138,
+        "conductorRut": "23.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "23.999.999-9",
+    "nombre": "Chofer Ejemplo 139",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 139,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h139",
+        "vehiculoId": 139,
+        "conductorRut": "23.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.000.000-0",
+    "nombre": "Chofer Ejemplo 140",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 140,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h140",
+        "vehiculoId": 140,
+        "conductorRut": "24.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.111.111-1",
+    "nombre": "Chofer Ejemplo 141",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 141,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h141",
+        "vehiculoId": 141,
+        "conductorRut": "24.111.111-1",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.222.222-2",
+    "nombre": "Chofer Ejemplo 142",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 142,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h142",
+        "vehiculoId": 142,
+        "conductorRut": "24.222.222-2",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.333.333-3",
+    "nombre": "Chofer Ejemplo 143",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 143,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h143",
+        "vehiculoId": 143,
+        "conductorRut": "24.333.333-3",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.444.444-4",
+    "nombre": "Chofer Ejemplo 144",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 144,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h144",
+        "vehiculoId": 144,
+        "conductorRut": "24.444.444-4",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.555.555-5",
+    "nombre": "Chofer Ejemplo 145",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 145,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h145",
+        "vehiculoId": 145,
+        "conductorRut": "24.555.555-5",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.666.666-6",
+    "nombre": "Chofer Ejemplo 146",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 146,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h146",
+        "vehiculoId": 146,
+        "conductorRut": "24.666.666-6",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.777.777-7",
+    "nombre": "Chofer Ejemplo 147",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 147,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h147",
+        "vehiculoId": 147,
+        "conductorRut": "24.777.777-7",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.888.888-8",
+    "nombre": "Chofer Ejemplo 148",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 148,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h148",
+        "vehiculoId": 148,
+        "conductorRut": "24.888.888-8",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "24.999.999-9",
+    "nombre": "Chofer Ejemplo 149",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 149,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h149",
+        "vehiculoId": 149,
+        "conductorRut": "24.999.999-9",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  },
+  {
+    "rut": "25.000.000-0",
+    "nombre": "Chofer Ejemplo 150",
+    "vencimientoLicencia": "2028-10-12",
+    "vehiculoId": 150,
+    "bloqueado": false,
+    "historialVehiculos": [
+      {
+        "id": "h150",
+        "vehiculoId": 150,
+        "conductorRut": "25.000.000-0",
+        "fechaInicio": "2024-01-01"
+      }
+    ]
+  }
+]

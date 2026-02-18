@@ -3,7 +3,7 @@ import { useStore } from '../contexts/StateContext';
 import { 
     UserPlus, Trash2, Edit3, Eye, X, FileText, 
     ShieldAlert, ShieldCheck, History, Save, Calendar, LayoutGrid, List,
-    Search, ArrowUpDown, Download, ChevronDown, FileCode
+    Search, ArrowUpDown, FileCode
 } from 'lucide-react';
 import type { Conductor } from '../types';
 import * as XLSX from 'xlsx';
@@ -32,7 +32,6 @@ const GestionConductores: React.FC = () => {
     const [motivoBloqueo, setMotivoBloqueo] = useState(MOTIVOS_BLOQUEO[0]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortBy, setSortBy] = useState<'nombre' | 'rut' | 'vehiculoId'>('nombre');
-    const [showExportMenu, setShowExportMenu] = useState(false);
 
     const exportConductores = (format: 'csv' | 'xlsx') => {
         const data = filteredConductores.map(c => ({
@@ -53,7 +52,6 @@ const GestionConductores: React.FC = () => {
         } else {
             XLSX.writeFile(workbook, `Conductores_${activeTab}.xlsx`);
         }
-        setShowExportMenu(false);
     };
 
     // Form states

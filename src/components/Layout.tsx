@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Search, ShieldAlert, Settings, Car, Users } from 'lucide-react';
+import { LayoutDashboard, Search, Car, Users } from 'lucide-react';
 
 const Layout: React.FC = () => {
   const location = useLocation();

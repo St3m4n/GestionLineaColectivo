@@ -1,0 +1,42 @@
+{
+  "folio": {
+    "top": 20,
+    "left": 350,
+    "fontSize": 18
+  },
+  "fechaEmision": {
+    "top": 45,
+    "left": 350,
+    "fontSize": 12
+  },
+  "fechaUso": {
+    "top": 120,
+    "left": 160,
+    "fontSize": 18
+  },
+  "vehiculoId": {
+    "top": 120,
+    "left": 20,
+    "fontSize": 24
+  },
+  "patente": {
+    "top": 155,
+    "left": 20,
+    "fontSize": 14
+  },
+  "conductor": {
+    "top": 120,
+    "left": 250,
+    "fontSize": 14
+  },
+  "variacion": {
+    "top": 155,
+    "left": 160,
+    "fontSize": 14
+  },
+  "valor": {
+    "top": 120,
+    "left": 380,
+    "fontSize": 24
+  }
+}

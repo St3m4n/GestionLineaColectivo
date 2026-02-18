@@ -82,7 +82,7 @@ const InspectorView: React.FC = () => {
     new Date(m.fechaVencimiento + 'T12:00:00') < new Date()
   ) : [];
 
-  const isLicenseExpired = associatedConductor && new Date(associatedConductor.vencimientoLicencia + 'T12:00:00') < new Date().setHours(0,0,0,0);
+  const isLicenseExpired = !!associatedConductor && new Date(associatedConductor.vencimientoLicencia + 'T12:00:00').getTime() < new Date().setHours(0,0,0,0);
 
   const isBlocked = foundVehiculo && (
     foundVehiculo.bloqueado || 
@@ -144,9 +144,9 @@ const InspectorView: React.FC = () => {
     setVentaConfirm(true);
   };
 
-  const confirmVenta = () => {
+  const confirmVenta = async () => {
     if (!foundVehiculo) return;
-    const result = venderTarjeta(foundVehiculo.id, selectedDates);
+    const result = await venderTarjeta(foundVehiculo.id, selectedDates);
     if (result.success) {
       setIsReissue(false);
       setLastCardsSold((result as any).cards || []);

@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useStore } from '../contexts/StateContext';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search, ChevronLeft, ChevronRight, Calendar, ChevronDown, FileCode, FileText } from 'lucide-react';
+import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash2, X, Check, Search, ChevronLeft, ChevronRight, Calendar, FileCode, FileText } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import type { Multa } from '../types';
 
@@ -21,10 +21,6 @@ const AdminDashboard: React.FC = () => {
     };
 
     const [activeAdminTab, setActiveAdminTab] = useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR'>('resumen');
-    const [showDailyExportMenu, setShowDailyExportMenu] = useState(false);
-    const [showMainExportMenu, setShowMainExportMenu] = useState(false);
-    const [showMonthlyExportMenu, setShowMonthlyExportMenu] = useState<number | null>(null);
-
     // Estado para edición de multas
     const [editingMultaId, setEditingMultaId] = React.useState<number | null>(null);
     const [editFineFormData, setEditFineFormData] = React.useState<Partial<Multa>>({});
@@ -207,7 +203,7 @@ const AdminDashboard: React.FC = () => {
                 Patente: v?.patente || 'N/A',
                 Conductor: c?.nombre || 'N/A',
                 'Ruta/Variación': t.variacion,
-                'Fecha Uso': t.fechaUso.split('T')[0]
+                'Fecha Uso': t.fechaUso ? t.fechaUso.split('T')[0] : ''
             };
         });
 
@@ -220,7 +216,6 @@ const AdminDashboard: React.FC = () => {
         } else {
             XLSX.writeFile(workbook, `Ventas_Diarias_${dateStr}.xlsx`);
         }
-        setShowDailyExportMenu(false);
     };
 
     const downloadReport = (targetDate: Date = new Date(), format: 'csv' | 'xlsx' = 'csv') => {
@@ -229,6 +224,7 @@ const AdminDashboard: React.FC = () => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         
         const monthTickets = tarjetas.filter(t => {
+            if (!t.fechaUso) return false;
             const d = new Date(t.fechaUso);
             return d.getMonth() === month && d.getFullYear() === year;
         });
@@ -239,7 +235,7 @@ const AdminDashboard: React.FC = () => {
 
             for (let day = 1; day <= daysInMonth; day++) {
                 const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-                const ticket = monthTickets.find(t => t.vehiculoId === v.id && t.fechaUso.startsWith(dateStr));
+                const ticket = monthTickets.find(t => t.vehiculoId === v.id && (t.fechaUso?.startsWith(dateStr) ?? false));
                 
                 const dayKey = day.toString();
                 if (ticket) {
@@ -264,8 +260,6 @@ const AdminDashboard: React.FC = () => {
             const fileName = `Reporte_Folios_${targetDate.toLocaleString('es-CL', { month: 'long', year: 'numeric' }).replace(' ', '_')}.xlsx`;
             XLSX.writeFile(workbook, fileName);
         }
-        setShowMainExportMenu(false);
-        setShowMonthlyExportMenu(null);
     };
 
     // Generar lista de los últimos 12 meses
@@ -481,7 +475,7 @@ const AdminDashboard: React.FC = () => {
                                                     </td>
                                                     <td className="py-4 px-6">
                                                         <span className="text-slate-600 font-medium">
-                                                            {new Date(t.fechaUso).toLocaleDateString()}
+                                                            {t.fechaUso ? new Date(t.fechaUso).toLocaleDateString() : ''}
                                                         </span>
                                                     </td>
                                                     <td className="py-4 px-6 text-right">

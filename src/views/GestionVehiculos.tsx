@@ -3,7 +3,7 @@ import { useStore } from '../contexts/StateContext';
 import { 
     Plus, Car, Trash2, Edit3, Eye, X, FileText, 
     ShieldAlert, ShieldCheck, History, Save, LayoutGrid, List, Search,
-    Download, ChevronDown, FileCode
+    FileCode
 } from 'lucide-react';
 import type { Vehiculo, RutaPrincipal } from '../types';
 import * as XLSX from 'xlsx';
@@ -43,7 +43,6 @@ const GestionVehiculos: React.FC = () => {
     const [viewMode, setViewMode] = useState<'cards' | 'list'>('list');
     const [searchTerm, setSearchTerm] = useState('');
     const [filterAnio, setFilterAnio] = useState<string>('');
-    const [showExportMenu, setShowExportMenu] = useState(false);
 
     const exportVehiculos = (format: 'csv' | 'xlsx') => {
         const data = filteredVehiculos.map(v => {
@@ -70,7 +69,6 @@ const GestionVehiculos: React.FC = () => {
         } else {
             XLSX.writeFile(workbook, `Vehiculos_${activeRouteTab.replace(' ', '_')}.xlsx`);
         }
-        setShowExportMenu(false);
     };
 
     // Form states
