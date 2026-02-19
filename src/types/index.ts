@@ -119,6 +119,7 @@ export interface PrintSettings {
   vehiculoId: PrintPosition;
   patente: PrintPosition;
   conductor: PrintPosition;
+  conductorRut: PrintPosition;
   controladorNombre: PrintPosition;
   controladorRut: PrintPosition;
   variacion: PrintPosition;

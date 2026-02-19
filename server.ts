@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename);
 const APP_ROOT = path.resolve(__dirname, '..');
 
 const PORT = Number(process.env.PORT ?? 3000);
-const HOST = process.env.HOST ?? '127.0.0.1';
+const HOST = process.env.HOST ?? '0.0.0.0';
 const DIST_DIR = path.join(APP_ROOT, 'dist');
 const DATA_DIR = path.join(APP_ROOT, 'data');
 

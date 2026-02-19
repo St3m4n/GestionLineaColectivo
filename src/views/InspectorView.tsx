@@ -693,18 +693,7 @@ const InspectorView: React.FC = () => {
                       <div>
                         {/* Headers eliminados para modo pre-impreso */}
                       </div>
-                      <div className="text-right">
-                        <p className="text-lg font-bold text-red-600 relative min-h-[1.5em]">
-                          <span className="value-dynamic" style={{ position: 'absolute', top: `${printSettings.folio.top}px`, left: `${printSettings.folio.left}px`, fontSize: `${printSettings.folio.fontSize}px` }}>
-                            {ticket.folio.startsWith('F-') ? ticket.folio.substring(2) : ticket.folio}
-                          </span>
-                        </p>
-                        <p className="text-xs text-slate-500 relative min-h-[1em]">
-                          <span className="value-dynamic" style={{ position: 'absolute', top: `${printSettings.fechaEmision.top}px`, left: `${printSettings.fechaEmision.left}px`, fontSize: `${printSettings.fechaEmision.fontSize}px` }}>
-                            {new Date(ticket.fechaEmision).toLocaleDateString()}
-                          </span>
-                        </p>
-                      </div>
+                      <div className="text-right" />
                     </div>
 
                     <div className="grid grid-cols-4 gap-8 py-4 data-section">
@@ -718,7 +707,7 @@ const InspectorView: React.FC = () => {
                       </div>
                       <div className="field-group relative min-h-[4em]">
                         <p className="text-lg font-black uppercase value-dynamic" style={{ position: 'absolute', top: `${printSettings.fechaUso.top}px`, left: `${printSettings.fechaUso.left}px`, fontSize: `${printSettings.fechaUso.fontSize}px` }}>
-                          {new Date(ticket.fechaUso).toLocaleDateString()}
+                          {ticket.fechaUso ? new Date(ticket.fechaUso).toLocaleDateString() : ''}
                         </p>
                         <p className="text-sm uppercase text-orange-600 font-black value-dynamic" style={{ position: 'absolute', top: `${printSettings.variacion.top}px`, left: `${printSettings.variacion.left}px`, fontSize: `${printSettings.variacion.fontSize}px` }}>
                           {formatRouteDisplay(foundVehiculo, ticket.variacion)}
@@ -728,6 +717,9 @@ const InspectorView: React.FC = () => {
                         <p className="text-sm font-bold value-dynamic" style={{ position: 'absolute', top: `${printSettings.conductor.top}px`, left: `${printSettings.conductor.left}px`, fontSize: `${printSettings.conductor.fontSize}px` }}>
                           {ticket.nombreConductor}
                         </p>
+                        <p className="text-xs font-mono value-dynamic" style={{ position: 'absolute', top: `${printSettings.conductorRut.top}px`, left: `${printSettings.conductorRut.left}px`, fontSize: `${printSettings.conductorRut.fontSize}px` }}>
+                          {associatedConductor?.rut || ''}
+                        </p>
                       </div>
                       <div className="text-right field-group">
                         {/* El precio ha sido removido por requerimiento del usuario */}
@@ -735,18 +727,11 @@ const InspectorView: React.FC = () => {
                     </div>
 
                     <div className="mt-6 pt-4 border-t border-slate-200 footer-section relative min-h-[3.5em]">
-                      <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Controlador en Ruta</p>
                       <p
                         className="text-sm font-bold value-dynamic"
                         style={{ position: 'absolute', top: `${printSettings.controladorNombre.top}px`, left: `${printSettings.controladorNombre.left}px`, fontSize: `${printSettings.controladorNombre.fontSize}px` }}
                       >
                         {controlador?.nombre || 'Controlador no asignado'}
-                      </p>
-                      <p
-                        className="text-xs font-mono value-dynamic"
-                        style={{ position: 'absolute', top: `${printSettings.controladorRut.top}px`, left: `${printSettings.controladorRut.left}px`, fontSize: `${printSettings.controladorRut.fontSize}px` }}
-                      >
-                        {controlador?.rut || '00.000.000-0'}
                       </p>
                     </div>
                   </div>

@@ -5,6 +5,18 @@ import { TrendingUp, Users, Car, CreditCard, Download, AlertCircle, Edit3, Trash
 import * as XLSX from 'xlsx';
 import type { Multa } from '../types';
 
+const PX_PER_CM = 37.7952755906;
+const PREVIEW_PX_PER_CM = 20;
+const INITIAL_PRINT_BASE_CM = {
+    fechaUso: { top: 13.3, left: 11.2, fontSize: 16 },
+    conductor: { top: 15.0, left: 2.5, fontSize: 14 },
+    conductorRut: { top: 16.2, left: 2.5, fontSize: 13 },
+    vehiculoId: { top: 6.2, left: 2.8, fontSize: 24 },
+    patente: { top: 13.3, left: 3.0, fontSize: 14 },
+    variacion: { top: 7.5, left: 10.8, fontSize: 16 },
+    controladorNombre: { top: 19.8, left: 2.8, fontSize: 14 },
+} as const;
+
 const AdminDashboard: React.FC = () => {
     const {
         tarjetas, vehiculos, conductores, vehiculosArchivados, conductoresArchivados,
@@ -20,6 +32,29 @@ const AdminDashboard: React.FC = () => {
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    const pxToCm = (px: number) => px / PX_PER_CM;
+    const cmToPx = (cm: number) => cm * PX_PER_CM;
+
+    const applyInitialPrintBase = () => {
+        Object.entries(INITIAL_PRINT_BASE_CM).forEach(([field, values]) => {
+            updatePrintSettings(field as any, {
+                top: Math.round(cmToPx(values.top)),
+                left: Math.round(cmToPx(values.left)),
+                fontSize: values.fontSize,
+            });
+        });
+    };
+
+    const printFieldConfig = [
+        { key: 'fechaUso', label: 'Fecha' },
+        { key: 'conductor', label: 'Nombre del Conductor' },
+        { key: 'conductorRut', label: 'C. Identidad' },
+        { key: 'vehiculoId', label: 'Número de Vehículo' },
+        { key: 'patente', label: 'Patente del Vehículo' },
+        { key: 'variacion', label: 'Ruta del Vehículo' },
+        { key: 'controladorNombre', label: 'Controlador' },
+    ] as const;
 
     const [activeAdminTab, setActiveAdminTab] = useState<'resumen' | 'caja' | 'vencimientos' | 'multas' | 'auditoria' | 'impresion' | 'calendario' | 'reportes' | 'rotacionR' | 'archivados'>('resumen');
     // Estado para edición de multas
@@ -1048,78 +1083,86 @@ const AdminDashboard: React.FC = () => {
                     <div className="flex justify-between items-center mb-6">
                         <div>
                             <h3 className="text-xl font-bold text-slate-800">Calibración de Impresión (Pre-Impreso)</h3>
-                            <p className="text-sm text-slate-500">Ajusta la posición (en píxeles) y tamaño de letra de los datos sobre el papel físico.</p>
+                            <p className="text-sm text-slate-500">Ajusta la posición en centímetros sobre hoja de 14,8 × 25,4 cm. El tamaño de letra sigue en px.</p>
                         </div>
+                        <button
+                            onClick={applyInitialPrintBase}
+                            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-wide"
+                        >
+                            Cargar Base Inicial
+                        </button>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                         {/* Controles */}
                         <div className="space-y-6">
-                            {Object.keys(printSettings)
-                                .filter(f => !['valor'].includes(f))
-                                .map((field) => (
+                            {printFieldConfig.map((fieldInfo) => {
+                                const field = fieldInfo.key;
+                                const current = (printSettings as any)[field];
+                                return (
                                 <div key={field} className="p-4 border rounded-lg bg-slate-50 space-y-3">
                                     <h4 className="font-bold text-sm uppercase text-slate-700 border-b pb-1 mb-2 italic">
-                                        {field === 'folio' ? 'Número de Folio' :
-                                            field === 'fechaEmision' ? 'Fecha de Emisión' :
-                                                field === 'vehiculoId' ? 'ID Vehículo (Número)' :
-                                                    field === 'patente' ? 'Patente Vehículo' :
-                                                        field === 'controladorNombre' ? 'Nombre Controlador' :
-                                                            field === 'controladorRut' ? 'RUT Controlador' :
-                                                        field === 'fechaUso' ? 'Fecha de Uso' :
-                                                            field === 'variacion' ? 'Ruta / Variación' : 'Nombre del Conductor'}
+                                        {fieldInfo.label}
                                     </h4>
                                     <div className="grid grid-cols-3 gap-4">
                                         <div>
-                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Superior (Top)</label>
+                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Superior (cm)</label>
                                             <input
                                                 type="number"
-                                                value={(printSettings as any)[field].top}
-                                                onChange={(e) => updatePrintSettings(field as any, { top: parseInt(e.target.value) })}
+                                                step="0.1"
+                                                value={pxToCm(current.top).toFixed(2)}
+                                                onChange={(e) => {
+                                                    const cm = parseFloat(e.target.value);
+                                                    if (Number.isNaN(cm)) return;
+                                                    updatePrintSettings(field as any, { top: Math.round(cmToPx(cm)) });
+                                                }}
                                                 className="w-full border p-1 text-sm rounded"
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Izquierda (Left)</label>
+                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Izquierda (cm)</label>
                                             <input
                                                 type="number"
-                                                value={(printSettings as any)[field].left}
-                                                onChange={(e) => updatePrintSettings(field as any, { left: parseInt(e.target.value) })}
+                                                step="0.1"
+                                                value={pxToCm(current.left).toFixed(2)}
+                                                onChange={(e) => {
+                                                    const cm = parseFloat(e.target.value);
+                                                    if (Number.isNaN(cm)) return;
+                                                    updatePrintSettings(field as any, { left: Math.round(cmToPx(cm)) });
+                                                }}
                                                 className="w-full border p-1 text-sm rounded"
                                             />
                                         </div>
                                         <div>
-                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Talle (Size)</label>
+                                            <label className="text-[10px] uppercase font-bold text-slate-400 block mb-1">Tamaño (px)</label>
                                             <input
                                                 type="number"
-                                                value={(printSettings as any)[field].fontSize}
+                                                value={current.fontSize}
                                                 onChange={(e) => updatePrintSettings(field as any, { fontSize: parseInt(e.target.value) })}
                                                 className="w-full border p-1 text-sm rounded"
                                             />
                                         </div>
                                     </div>
                                 </div>
-                            ))}
+                            )})}
                         </div>
 
                         {/* Vista Previa Representativa */}
                         <div className="hidden lg:block">
                             <div className="sticky top-6 border-2 border-slate-300 rounded-lg p-2 bg-slate-200">
-                                <div className="bg-white relative shadow-2xl overflow-hidden mx-auto" style={{ width: '400px', height: '300px' }}>
+                                <div className="bg-white relative shadow-2xl overflow-hidden mx-auto" style={{ width: `${14.8 * PREVIEW_PX_PER_CM}px`, height: `${25.4 * PREVIEW_PX_PER_CM}px` }}>
                                     <div className="absolute inset-0 opacity-10 flex items-center justify-center pointer-events-none">
                                         <p className="text-4xl font-black rotate-45 border-4 p-4 border-slate-800 uppercase">Pre-Impreso</p>
                                     </div>
 
                                     {/* Puntos de datos */}
-                                    <span style={{ position: 'absolute', top: `${printSettings.folio.top}px`, left: `${printSettings.folio.left}px`, fontSize: `${printSettings.folio.fontSize}px`, fontWeight: 'bold' }}>1234</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.fechaEmision.top}px`, left: `${printSettings.fechaEmision.left}px`, fontSize: `${printSettings.fechaEmision.fontSize}px` }}>25/12/2023</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.vehiculoId.top}px`, left: `${printSettings.vehiculoId.left}px`, fontSize: `${printSettings.vehiculoId.fontSize}px`, fontWeight: '900' }}>500</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.patente.top}px`, left: `${printSettings.patente.left}px`, fontSize: `${printSettings.patente.fontSize}px` }}>ABCD-12</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.fechaUso.top}px`, left: `${printSettings.fechaUso.left}px`, fontSize: `${printSettings.fechaUso.fontSize}px`, fontWeight: 'bold' }}>26/12/2023</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.variacion.top}px`, left: `${printSettings.variacion.left}px`, fontSize: `${printSettings.variacion.fontSize}px`, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.conductor.top}px`, left: `${printSettings.conductor.left}px`, fontSize: `${printSettings.conductor.fontSize}px` }}>JUAN PEREZ</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.controladorNombre.top}px`, left: `${printSettings.controladorNombre.left}px`, fontSize: `${printSettings.controladorNombre.fontSize}px` }}>CONTROLADOR: ANA GÓMEZ</span>
-                                    <span style={{ position: 'absolute', top: `${printSettings.controladorRut.top}px`, left: `${printSettings.controladorRut.left}px`, fontSize: `${printSettings.controladorRut.fontSize}px` }}>RUT: 12.345.678-9</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.fechaUso.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.fechaUso.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.fechaUso.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px`, fontWeight: 'bold' }}>21/02/2026</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.conductor.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.conductor.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.conductor.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px` }}>JUAN PEREZ</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.conductorRut.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.conductorRut.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.conductorRut.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px` }}>12.345.678-9</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.vehiculoId.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.vehiculoId.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.vehiculoId.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px`, fontWeight: '900' }}>17</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.patente.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.patente.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.patente.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px` }}>ZZ-XX-17</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.variacion.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.variacion.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.variacion.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px`, color: '#f97316', fontWeight: 'bold' }}>TRONCAL L</span>
+                                    <span style={{ position: 'absolute', top: `${pxToCm(printSettings.controladorNombre.top) * PREVIEW_PX_PER_CM}px`, left: `${pxToCm(printSettings.controladorNombre.left) * PREVIEW_PX_PER_CM}px`, fontSize: `${(printSettings.controladorNombre.fontSize / PX_PER_CM) * PREVIEW_PX_PER_CM}px` }}>ANA GÓMEZ</span>
                                 </div>
                                 <div className="mt-4 text-center text-[10px] text-slate-500 uppercase font-bold">
                                     Representación Visual (Escala Reducida)

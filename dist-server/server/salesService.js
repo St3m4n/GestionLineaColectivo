@@ -10,13 +10,14 @@ const ASIGNACIONES_R_FILE = 'asignaciones_r.json';
 const DEFAULT_PRINT_SETTINGS = {
     folio: { top: 20, left: 350, fontSize: 18 },
     fechaEmision: { top: 45, left: 350, fontSize: 12 },
-    fechaUso: { top: 120, left: 160, fontSize: 18 },
-    vehiculoId: { top: 120, left: 20, fontSize: 24 },
-    patente: { top: 155, left: 20, fontSize: 14 },
-    conductor: { top: 120, left: 250, fontSize: 14 },
-    controladorNombre: { top: 240, left: 20, fontSize: 12 },
-    controladorRut: { top: 260, left: 20, fontSize: 11 },
-    variacion: { top: 155, left: 160, fontSize: 14 },
+    fechaUso: { top: 503, left: 423, fontSize: 16 },
+    vehiculoId: { top: 234, left: 106, fontSize: 24 },
+    patente: { top: 503, left: 113, fontSize: 14 },
+    conductor: { top: 567, left: 95, fontSize: 14 },
+    conductorRut: { top: 612, left: 95, fontSize: 13 },
+    controladorNombre: { top: 748, left: 106, fontSize: 14 },
+    controladorRut: { top: 790, left: 106, fontSize: 11 },
+    variacion: { top: 283, left: 408, fontSize: 16 },
     valor: { top: 120, left: 380, fontSize: 24 },
 };
 const DEFAULT_CONTROLADOR = {
